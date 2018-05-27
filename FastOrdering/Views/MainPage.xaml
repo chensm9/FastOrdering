@@ -99,8 +99,8 @@
             <AppBarButton Name="logIn" ToolTipService.ToolTip="登录或退出" Grid.Row="0" Grid.Column="1" Icon="Contact" HorizontalAlignment="Right" VerticalAlignment="Top" Click="logOnOrLogOut" />
             <Grid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="buyer" Source="../Assets/buyer.png" Margin="0, 0, 50, 0" Tapped="navigateToLogOn" PointerMoved="mouseChangeBuyer"/>
-                    <Image x:Name ="supplier" Source="../Assets/supplier.png" VerticalAlignment="Bottom" Tapped="navigateToOrderPage" PointerMoved="mouseChangeSupplier" />
+                    <Image x:Name="buyer" Source="../Assets/buyer.png" Margin="0, 0, 50, 0" Tapped="navigateToOrderPage" PointerMoved="mouseChangeBuyer"/>
+                    <Image x:Name ="supplier" Source="../Assets/supplier.png" VerticalAlignment="Bottom" Tapped="navigateToLogOn" PointerMoved="mouseChangeSupplier" />
                 </StackPanel>
             </Grid>
             <StackPanel x:Name="sampleList" Grid.Row ="5" Grid.Column ="1" Margin="50, 20, 50, 0" HorizontalAlignment="Left"
