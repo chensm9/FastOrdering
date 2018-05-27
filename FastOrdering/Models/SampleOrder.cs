@@ -41,6 +41,20 @@ namespace FastOrdering.Models
             }
         }
 
+        private int orderNum_ { get; set; }
+        public int OrderNum
+        {
+            get
+            {
+                return this.orderNum_;
+            }
+            set
+            {
+                this.orderNum_ = value;
+                NotifyPropertyChanged("OrderNum");
+            }
+        }
+
         //销量
         private int sold_ { get; set; }
         public int Sold
