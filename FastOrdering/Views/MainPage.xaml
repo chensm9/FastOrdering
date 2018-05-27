@@ -1,0 +1,123 @@
+﻿<Page
+    x:Class="FastOrdering.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="using:FastOrdering.Models"
+    Style="{StaticResource PageStyle}"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <!--数据绑定模板-->
+        <DataTemplate x:Key="DataTemplate" x:DataType="md:SampleOrder">
+            <StackPanel Margin="8">
+                <Image Source="{x:Bind Pict}" HorizontalAlignment="Center" Margin="0,0,0,5" Width="90" />
+                <TextBlock Text="{x:Bind Summary}" Style="{StaticResource ListSubTitleStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+
+        <!--横向布局-->
+        <ItemsPanelTemplate x:Key="HorizontalItemsPanelTemplate">
+            <VirtualizingStackPanel Orientation="Horizontal"
+                VerticalAlignment="Top"
+                ScrollViewer.HorizontalScrollMode="Enabled"
+                ScrollViewer.VerticalScrollMode="Disabled"/>
+        </ItemsPanelTemplate>
+    </Page.Resources>
+    <Grid
+        x:Name="ContentArea"
+        Margin="{StaticResource MediumLeftRightMargin}"
+        >
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="miniWidth">
+                    <VisualState.Setters>
+                        <Setter Target="topBlankGrid.Height"  Value="20*"/>
+                        <Setter Target="titleGrid.Height"  Value="18*"/>
+                        <Setter Target="subtitleGrid.Height" Value="5*"/>
+                        <Setter Target="mediumBlankGrid.Height"  Value="10*"/>
+                        <Setter Target="entranceGrid.Height" Value="20*"/>
+                        <Setter Target="blankGrid.Height" Value="50*"/>
+                        <Setter Target="buyer.Margin" Value="0,0,10,0"/>
+                        <Setter Target="rightTitle.FontSize" Value="16"/>
+                        <Setter Target="sampleList.Visibility" Value="Collapsed"/>
+                        <Setter Target="owner.FontSize" Value="12"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"  MinWindowHeight="0"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="midWidth">
+                    <VisualState.Setters>
+                        <Setter Target="sampleList.Visibility" Value="Collapsed"/>
+                        <Setter Target="titleGrid.Height"  Value="30*"/>
+                        <Setter Target="entranceGrid.Height" Value="34*"/>
+                        <Setter Target="owner.FontSize" Value="14"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="400"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="largeWidth">
+                    <VisualState.Setters>
+                        <Setter Target="topBlankGrid.Height"  Value="60*"/>
+                        <Setter Target="titleGrid.Height"  Value="90*"/>
+                        <Setter Target="subtitleGrid.Height" Value="20*"/>
+                        <Setter Target="mediumBlankGrid.Height"  Value="25*"/>
+                        <Setter Target="entranceGrid.Height" Value="110*"/>
+                        <Setter Target="blankGrid.Height" Value="170*"/>
+                        <Setter Target="buyer.Margin" Value="0,0,50,0"/>
+                        <Setter Target="sampleList.Visibility" Value="Visible"/>
+                        <Setter Target="owner.FontSize" Value="{StaticResource MediumFontSize}"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1300" MinWindowHeight="800"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid
+            Background="#fff9e0">
+            <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
+                Place your content here.-->
+
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="topBlankGrid" Height="30*" />
+                <RowDefinition x:Name="titleGrid"  Height="30*" />
+                <RowDefinition x:Name="subtitleGrid" Height="10*" />
+                <RowDefinition x:Name ="mediumBlankGrid" Height="10*"/>
+                <RowDefinition x:Name ="entranceGrid" Height= "38*" />
+                <RowDefinition x:Name="blankGrid" Height= "80*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20" />
+            </Grid.ColumnDefinitions>
+            <Image ToolTipService.ToolTip="我是买家" Name="Title" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Source="../Assets/title.png" />
+            <Image ToolTipService.ToolTip="我是卖家" Name ="subTitle" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Source="../Assets/subtitle.png"/>
+            <AppBarButton Name="logIn" ToolTipService.ToolTip="登录或退出" Grid.Row="0" Grid.Column="1" Icon="Contact" HorizontalAlignment="Right" VerticalAlignment="Top" Click="logOnOrLogOut" />
+            <Grid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Image x:Name="buyer" Source="../Assets/buyer.png" Margin="0, 0, 50, 0" Tapped="navigateToLogOn" PointerMoved="mouseChangeBuyer"/>
+                    <Image x:Name ="supplier" Source="../Assets/supplier.png" VerticalAlignment="Bottom" Tapped="navigateToOrderPage" PointerMoved="mouseChangeSupplier" />
+                </StackPanel>
+            </Grid>
+            <StackPanel x:Name="sampleList" Grid.Row ="5" Grid.Column ="1" Margin="50, 20, 50, 0" HorizontalAlignment="Left"
+                            VerticalAlignment="Top" Visibility="Visible">
+                <TextBlock x:Name ="rightTitle"  Text="猜你喜欢" Margin="0, 0, 0, 20" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <ListView Name="MyListView" Grid.Row="1"
+                            SelectionMode="None" IsItemClickEnabled="True"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            ItemsSource="{x:Bind SampleItems}"
+                            ItemTemplate="{StaticResource DataTemplate}"
+                            ItemContainerStyle="{StaticResource HorizontalItemContainerStyle}"
+                            ItemsPanel="{StaticResource HorizontalItemsPanelTemplate}" />
+            </StackPanel>
+            <TextBlock x:Name="owner" Grid.Row ="5" Grid.Column ="1" Text="版权所有 仙草开发小组 2018" Margin="0, 0, 0, 20" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,74 @@
+﻿<UserControl
+    x:Class="FastOrdering.Views.OrderingDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    
+    <ScrollViewer Name="ForegroundElement" VerticalScrollMode="Enabled" HorizontalAlignment="Stretch" Padding="12,0">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="miniWidth">
+                    <VisualState.Setters>
+                        <Setter Target="orderPic.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+
+                <VisualState x:Name="largeWidth">
+                    <VisualState.Setters>
+                        <Setter Target="orderPic.Visibility" Value="Visible"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <StackPanel HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,15,0,0">
+                <Image x:Name="orderPic" Height="120" Width="180" Grid.Column="0" Source="{x:Bind MasterMenuItem.Pict, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <StackPanel Margin="12,0,0,0">
+                    <TextBlock
+                    Text="{x:Bind MasterMenuItem.OrderName, Mode=OneWay}"
+                    Style="{StaticResource SubheaderTextBlockStyle}" />
+                    <TextBlock Text="简述" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{x:Bind MasterMenuItem.Summary, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                    <TextBlock Text="价格" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{x:Bind MasterMenuItem.Price, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Height="40" ToolTipService.ToolTip="刷新" Width="40" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,10,0">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>
+                        </Button>
+                        <Button Height="45" ToolTipService.ToolTip="赞" Width="45" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,10,0">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8E1;"/>
+                        </Button>
+                        <Button Height="50" Width="50" ToolTipService.ToolTip="加入购物车" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Name="block" Padding="0,15,0,0">
+                <TextBlock Text="商品名" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind MasterMenuItem.OrderName, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="月销量" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
+                <TextBlock Text="{x:Bind MasterMenuItem.Sold, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="人气" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
+                <TextBlock Text="{x:Bind MasterMenuItem.Visited, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="赞数" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
+                <TextBlock Text="{x:Bind MasterMenuItem.Collected, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="价格" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
+                <TextBlock Text="{x:Bind MasterMenuItem.Price, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                <TextBlock Text="Note 1" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,16,0,0" />
+                <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="jjjjj"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

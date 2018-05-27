@@ -1,0 +1,99 @@
+﻿<Page
+    x:Class="FastOrdering.Views.LogOnPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    mc:Ignorable="d">
+    <Grid
+        x:Name="ContentArea"
+        Margin="{StaticResource MediumLeftRightMargin}"
+        >
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="miniWidth">
+                    <VisualState.Setters>
+                        <Setter Target="title.FontSize" Value="22"/>
+                        <Setter Target="username.Width" Value="180"/>
+                        <Setter Target="password.Width" Value="180"/>
+                        <Setter Target="click1.Height" Value="20"/>
+                        <Setter Target="click2.Height" Value="20"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="midWidth">
+                    <VisualState.Setters>
+                        <Setter Target="username.Width" Value="220"/>
+                        <Setter Target="password.Width" Value="220"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="600"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="largeWidth">
+                    <VisualState.Setters>
+                        <Setter Target="title.FontSize" Value="{StaticResource LargeFontSize}"/>
+                        <Setter Target="username.Width" Value="300"/>
+                        <Setter Target="password.Width" Value="300"/>
+                        <Setter Target="click1.Height" Value="25"/>
+                        <Setter Target="click2.Height" Value="25"/>
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
+                Place your content here.-->
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="2*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition x:Name="mediumColumn" Width="4*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" Grid.Row="1" Padding="30, 30, 0, 30">
+                <StackPanel.Background>
+                    <AcrylicBrush TintColor="#FFF1C550" TintOpacity="0.2"/>
+                </StackPanel.Background>
+                <TextBlock x:Name="title" Text="商家登录" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Margin="0, 20, 0, 20" >
+                    <TextBox x:Name="username" PlaceholderText="用户名" Height="35" Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}" FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" TextChanging="userNameChanging" >
+                        <TextBox.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#000000" Offset="1"/>
+                                <GradientStop Offset="0.96"/>
+                            </LinearGradientBrush>
+                        </TextBox.BorderBrush>
+                    </TextBox>
+                    <Image x:Name="click1" Source="../Assets/click.png" Height="25" Margin="20, 0, 0, 0" Visibility="Collapsed"/>
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal"  Margin="0, 0, 0, 50" >
+                    <PasswordBox x:Name="password" PlaceholderText="密码" Height="35" Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}" FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" PasswordChanging="passwordChanging" >
+                        <PasswordBox.BorderBrush>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#000000" Offset="1"/>
+                                <GradientStop Offset="0.96"/>
+                            </LinearGradientBrush>
+                        </PasswordBox.BorderBrush>
+                    </PasswordBox>
+                    <Image x:Name="click2" Source="../Assets/click.png" Height="25" Margin="20, 0, 0, 0" Visibility="Collapsed"/>
+                </StackPanel>
+                <TextBlock x:Name="forget" Text="忘记密码？" FontSize="{StaticResource MediumFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 15" Tapped="changePassword"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                    <Button x:Name="logIn" Content="登录" Style="{StaticResource ButtonRevealStyle}" Height="35" FontSize="{StaticResource MediumFontSize}" Width="60" VerticalContentAlignment="Center" Margin="0,0, 100,0" Click="checkAndLogOn"/>
+                    <Button x:Name="clear" Content="清空" Style="{StaticResource ButtonRevealStyle}" Height="35" FontSize="{StaticResource MediumFontSize}" Width="60" VerticalContentAlignment="Center" Click="clearContent"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>
