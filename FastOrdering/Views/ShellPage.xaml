@@ -24,11 +24,11 @@
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
             <NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />
-            <NavigationViewItem x:Uid="Shell_Ordering" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderingPage" Visibility="{x:Bind SampleOrderVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_ShoppingCart" Icon="Document" helpers:NavHelper.NavigateTo="views:ShoppingCartPage" Visibility="{x:Bind ShoppingCartVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_LogOn" Icon="Document" helpers:NavHelper.NavigateTo="views:LogOnPage" Visibility="{x:Bind LogOnVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_OrderView" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderViewPage" Visibility="{x:Bind OrderViewVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_Management" Icon="Document" helpers:NavHelper.NavigateTo="views:ManagementPage" Visibility="{x:Bind ManagementVisible,Mode=TwoWay}" />
+            <NavigationViewItem x:Uid="Shell_Ordering" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderingPage" Visibility="{x:Bind UM.SampleOrderVisible,Mode=TwoWay}" />
+            <NavigationViewItem x:Uid="Shell_ShoppingCart" Icon="Document" helpers:NavHelper.NavigateTo="views:ShoppingCartPage" Visibility="{x:Bind UM.ShoppingCartVisible,Mode=TwoWay}" />
+            <NavigationViewItem x:Uid="Shell_LogOn" Icon="Document" helpers:NavHelper.NavigateTo="views:LogOnPage" Visibility="{x:Bind UM.LogOnVisible,Mode=TwoWay}" />
+            <NavigationViewItem x:Uid="Shell_OrderView" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderViewPage" Visibility="{x:Bind UM.OrderViewVisible,Mode=TwoWay}" />
+            <NavigationViewItem x:Uid="Shell_Management" Icon="Document" helpers:NavHelper.NavigateTo="views:ManagementPage" Visibility="{x:Bind UM.ManagementVisible,Mode=TwoWay}" />
         </NavigationView.MenuItems>
         <NavigationView.HeaderTemplate>
             <DataTemplate>

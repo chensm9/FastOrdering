@@ -71,7 +71,7 @@ namespace FastOrdering.Views
                     if (username.Text == UserManagement.getInstance().userName &&
                     password.Password == UserManagement.getInstance().password)
                     {
-                        UserManagement.getInstance().LogOn();
+                        UserManagement.getInstance().SupplierLogOn();
                         ContentDialog logOn = new ContentDialog
                         {
                             Title = "登录",

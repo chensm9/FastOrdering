@@ -9,6 +9,7 @@ using FastOrdering.Helpers;
 using FastOrdering.Services;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Windows.Foundation.Metadata;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -18,11 +19,7 @@ namespace FastOrdering.Views
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
         //页面导航元素是否可见
-        public Visibility SampleOrderVisible = Visibility.Visible;
-        public Visibility ShoppingCartVisible = Visibility.Visible;
-        public Visibility LogOnVisible = Visibility.Visible;
-        public Visibility OrderViewVisible = Visibility.Visible;
-        public Visibility ManagementVisible = Visibility.Visible;
+        public UserManagement UM = UserManagement.getInstance();
 
         private NavigationViewItem _selected;
 
