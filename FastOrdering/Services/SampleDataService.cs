@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 using FastOrdering.Models;
-
+using Windows.UI.Notifications;
 
 namespace FastOrdering.Services
 {
@@ -134,6 +134,43 @@ namespace FastOrdering.Services
             {
                 mainPageViewItems.Remove(mainPageViewItems[mainPageViewItems.Count - 1]);
             }
+        }
+
+        public void UpdateTile()
+        {
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            SampleOrderSQLManagement.GetInstance().GetAll();
+            ObservableCollection<SampleOrder> all_item = new ObservableCollection<SampleOrder>();
+            for (int i = 0; i < SampleOrderSQLManagement.GetInstance().allItems.Count; ++i)
+            {
+                all_item.Add(SampleOrderSQLManagement.GetInstance().allItems[i]);
+            }
+            for (int i = 0; i < all_item.Count; i++)
+            {
+                for (int j = i + 1; j < all_item.Count; j++)
+                {
+                    if (all_item[i].Collected < all_item[j].Collected)
+                    {
+                        SampleOrder tmp = all_item[i];
+                        all_item[i] = all_item[j];
+                        all_item[j] = tmp;
+                    }
+                }
+            }
+            int count = all_item.Count >= 10 ? 10 : all_item.Count;
+            for(int i = 0; i < count; i++)
+            {
+                createTile(all_item[i]);
+            }
+
+        }
+
+        private void createTile(SampleOrder item)
+        {
+            var xmlDoc = TileService.CreateTiles(item);
+            var updater = TileUpdateManager.CreateTileUpdaterForApplication();
+            TileNotification notification = new TileNotification(xmlDoc);
+            updater.Update(notification);
         }
 
         //得到购物车推荐列表

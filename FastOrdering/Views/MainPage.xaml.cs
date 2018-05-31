@@ -17,6 +17,7 @@ namespace FastOrdering.Views
         //是否登录
         public MainPage() {
             instance.GetCollectedListView();
+            instance.UpdateTile();
             InitializeComponent();
             ImageBrush imageBrush = new ImageBrush();
             imageBrush.ImageSource = new BitmapImage(new Uri("ms-appx:///Assets/background.jpg", UriKind.Absolute));
