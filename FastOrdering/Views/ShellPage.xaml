@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="FastOrdering.Views.ShellPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
@@ -14,7 +14,7 @@
         SelectedItem="{x:Bind Selected, Mode=OneWay}"
         Header="{x:Bind Selected.Content, Mode=OneWay}"
         ItemInvoked="OnItemInvoked"
-        IsSettingsVisible="False"
+        IsSettingsVisible="True"
         Background="#fff9e0">
         <NavigationView.MenuItems>
             <!--

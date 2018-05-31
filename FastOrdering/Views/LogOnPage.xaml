@@ -66,6 +66,7 @@
                 </StackPanel.Background>
                 <TextBlock x:Name="title" Text="商家登录" FontSize="{StaticResource LargeFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Margin="0, 20, 0, 20" >
+                    <TextBlock x:Name="usrTitle" Text="用户名" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,10,0"/>
                     <TextBox x:Name="username" PlaceholderText="用户名" Height="35" Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}" FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" TextChanging="userNameChanging" >
                         <TextBox.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -78,6 +79,7 @@
                 </StackPanel>
 
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal"  Margin="0, 0, 0, 50" >
+                    <TextBlock x:Name="passwordTitle" Text="密码" Style="{StaticResource SubtitleTextBlockStyle}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,30,0"/>
                     <PasswordBox x:Name="password" PlaceholderText="密码" Height="35" Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}" FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" PasswordChanging="passwordChanging" >
                         <PasswordBox.BorderBrush>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -88,7 +90,7 @@
                     </PasswordBox>
                     <Image x:Name="click2" Source="../Assets/click.png" Height="25" Margin="20, 0, 0, 0" Visibility="Collapsed"/>
                 </StackPanel>
-                <TextBlock x:Name="forget" Text="忘记密码？" FontSize="{StaticResource MediumFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 15" Tapped="changePassword"/>
+                <TextBlock x:Name="forget" Text="忘记密码？" FontSize="{StaticResource MediumFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 15" Tapped="changePassword" PointerExited="ChangeToArrow" PointerMoved="ChangeToHand"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                     <Button x:Name="logIn" Content="登录" Style="{StaticResource ButtonRevealStyle}" Height="35" FontSize="{StaticResource MediumFontSize}" Width="60" VerticalContentAlignment="Center" Margin="0,0, 100,0" Click="checkAndLogOn"/>
                     <Button x:Name="clear" Content="清空" Style="{StaticResource ButtonRevealStyle}" Height="35" FontSize="{StaticResource MediumFontSize}" Width="60" VerticalContentAlignment="Center" Click="clearContent"/>

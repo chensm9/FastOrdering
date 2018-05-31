@@ -99,6 +99,12 @@
       <Version>2.0.0</Version>
     </PackageReference>
     <!-- Nuget package references -->
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
+      <Version>2.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>11.0.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>2.2.0</Version>
     </PackageReference>
@@ -111,16 +117,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activation\ActivationHandler.cs" />
+    <Compile Include="Helpers\EnumToBooleanConverter.cs" />
+    <Compile Include="Helpers\Json.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
+    <Compile Include="Helpers\SettingsStorageExtensions.cs" />
     <Compile Include="Models\UserOrder.cs" />
     <Compile Include="Models\SampleOrder.cs" />
     <Compile Include="Services\ActivationService.cs" />
     <Compile Include="Activation\DefaultLaunchActivationHandler.cs" />
+    <Compile Include="Services\LiveTileService.cs" />
+    <Compile Include="Services\LiveTileService.Samples.cs" />
+    <Compile Include="Services\MessageHelper.cs" />
     <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\OnBackgroundEnteringEventArgs.cs" />
+    <Compile Include="Services\SuspendAndResumeService.cs" />
+    <Compile Include="Services\SuspensionState.cs" />
+    <Compile Include="Services\ThemeSelectorService.cs" />
     <Compile Include="Services\UserDataService.cs" />
     <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\UserManagement.cs" />
     <Compile Include="Services\SQLManagement.cs" />
+    <Compile Include="Services\Weather.cs" />
     <Compile Include="Views\EditPage.xaml.cs">
       <DependentUpon>EditPage.xaml</DependentUpon>
     </Compile>
@@ -144,6 +161,9 @@
     </Compile>
     <Compile Include="Views\OrderViewPage.xaml.cs">
       <DependentUpon>OrderViewPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShellPage.xaml.cs">
       <DependentUpon>ShellPage.xaml</DependentUpon>
@@ -212,6 +232,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OrderViewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\SettingsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

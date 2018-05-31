@@ -11,8 +11,12 @@
         <!--数据绑定模板-->
         <DataTemplate x:Key="DataTemplate" x:DataType="md:SampleOrder">
             <StackPanel Margin="8">
-                <Image Source="{x:Bind Pict}" HorizontalAlignment="Center" Margin="0,0,0,5" Width="90" />
-                <TextBlock Text="{x:Bind Summary}" Style="{StaticResource ListSubTitleStyle}"/>
+                <Image Source="{x:Bind Pict}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,5" Width="80" />
+                <TextBlock Text="{x:Bind OrderName}" Style="{StaticResource ListTitleStyle}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="价格：" Style="{StaticResource ListTitleStyle}" Margin="10,0,0,0"/>
+                    <TextBlock Text="{x:Bind Price, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
         <!--容器模板-->
@@ -62,6 +66,7 @@
                         <Setter Target="MyListView.Visibility" Value="Collapsed"/>
                         <Setter Target="totalSumTitle.FontSize" Value="14"/>
                         <Setter Target="totalPriceTitle.FontSize" Value="14"/>
+                        <Setter Target="akg.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="0"  MinWindowHeight="0"/>
@@ -75,40 +80,49 @@
                         <Setter Target="MyListView.Visibility" Value="Collapsed"/>
                         <Setter Target="totalSumTitle.FontSize" Value="14"/>
                         <Setter Target="totalPriceTitle.FontSize" Value="14"/>
+                        <Setter Target="akg.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="600"  MinWindowHeight="0"/>
                     </VisualState.StateTriggers>
                 </VisualState>
-                <VisualState x:Name="midWidth">
+                <!--<VisualState x:Name="midWidth">
                     <VisualState.Setters>
-                        <Setter Target="userNum.Width" Value="200"/>
-                        <Setter Target="tableId.Width" Value="200"/>
-                        <Setter Target="details.Width" Value="200"/>
+                        <Setter Target="userNum.Width" Value="150"/>
+                        <Setter Target="tableId.Width" Value="150"/>
+                        <Setter Target="details.Width" Value="150"/>
                         <Setter Target="MyListView.Visibility" Value="Visible"/>
-                        <Setter Target="MyListView.Width" Value="300"/>
-                        <Setter Target="totalSumTitle.Style" Value="{StaticResource SubtitleTextBlockStyle}"/>
-                        <Setter Target="totalPriceTitle.Style" Value="{StaticResource SubtitleTextBlockStyle}"/>
+                        <Setter Target="MyListView.Width" Value="600"/>
+                        <Setter Target="totalSumTitle.FontSize" Value="16"/>
+                        <Setter Target="totalPriceTitle.FontSize" Value="16"/>
+                        <Setter Target="akg.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1200" MinWindowHeight="400"/>
+                        <AdaptiveTrigger MinWindowWidth="1100" MinWindowHeight="300"/>
                     </VisualState.StateTriggers>
-                </VisualState>
+                </VisualState>-->
                 <VisualState x:Name="largeWidth">
                     <VisualState.Setters>
                         <Setter Target="userNum.Width" Value="300"/>
                         <Setter Target="tableId.Width" Value="300"/>
                         <Setter Target="details.Width" Value="300"/>
+                        <Setter Target="MyListView.Visibility" Value="Visible"/>
                         <Setter Target="MyListView.Width" Value="400"/>
+                        <Setter Target="totalSumTitle.FontSize" Value="16"/>
+                        <Setter Target="totalPriceTitle.FontSize" Value="16"/>
+                        <Setter Target="akg.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1400" MinWindowHeight="700"/>
+                        <AdaptiveTrigger MinWindowWidth="1300" MinWindowHeight="670"/>
                     </VisualState.StateTriggers>
                 </VisualState>
 
                 <VisualState x:Name="largelargeWidth">
                     <VisualState.Setters>
-                        <Setter Target="MyListView.Width" Value="600"/>
+                        <Setter Target="MyListView.Width" Value="400"/>
+                        <Setter Target="totalSumTitle.Style" Value="{StaticResource SubtitleTextBlockStyle}"/>
+                        <Setter Target="totalPriceTitle.Style" Value="{StaticResource SubtitleTextBlockStyle}"/>
+                        <Setter Target="akg.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1600"/>
@@ -118,6 +132,7 @@
                 <VisualState x:Name="largelargelWidth">
                     <VisualState.Setters>
                         <Setter Target="MyListView.Width" Value="800"/>
+                        <Setter Target="akg.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1800"/>
@@ -127,6 +142,7 @@
                 <VisualState x:Name="largelargellWidth">
                     <VisualState.Setters>
                         <Setter Target="MyListView.Width" Value="900"/>
+                        <Setter Target="akg.Visibility" Value="Visible"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
                         <AdaptiveTrigger MinWindowWidth="1900"/>
@@ -153,7 +169,7 @@
             <!--Gird-->
             <ScrollViewer Grid.Column="1" Grid.Row="2" VerticalScrollBarVisibility="Auto">
                 <!--first row-->
-                <ListView IsItemClickEnabled="True" ItemsSource ="{x:Bind SampleItems}">
+                <ListView IsItemClickEnabled="True" ItemsSource ="{x:Bind instance._current.SampleItems}" ItemClick="showDetails" RequestedTheme="Light">
                     <ListView.ItemTemplate >
                         <DataTemplate x:DataType="md:SampleOrder">
                             <Grid Grid.Column ="1"  Height="100" Padding="0,8">
@@ -163,22 +179,32 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Height="50" Width="75" Grid.Column="0" Source="{x:Bind Pict}" Visibility="{Binding ElementName=MyListView, Path=Visibility}" VerticalAlignment="Center"/>
+                                <Image Height="50" Width="75" Grid.Column="0" Source="{x:Bind Pict, Mode=OneWay}" Visibility="{Binding ElementName=akg, Path=Visibility}" VerticalAlignment="Center"/>
                                 <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{x:Bind OrderName}" Style="{ThemeResource ListTitleStyle}"/>
-                                    <TextBlock Text="{x:Bind Summary}" Style="{StaticResource ListSubTitleStyle}"/>
-                                    <TextBlock Text="{x:Bind Price}" Style="{StaticResource ListSubTitleStyle}"/>
+                                    <TextBlock Text="{x:Bind OrderName, Mode=TwoWay}" Style="{ThemeResource ListTitleStyle}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="简介：" Style="{StaticResource ListTitleStyle}" Margin="10,0,0,0"/>
+                                        <TextBlock Text="{x:Bind Summary, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
+                                        <TextBlock Text="价格：" Style="{StaticResource ListTitleStyle}" Margin="10,0,0,0"/>
+                                        <TextBlock Text="{x:Bind Price, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="访问：" Style="{StaticResource ListTitleStyle}" Margin="10,0,0,0"/>
+                                        <TextBlock Text="{x:Bind Visited, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
+                                        <TextBlock Text="赞：" Style="{StaticResource ListTitleStyle}" Margin="10,0,0,0"/>
+                                        <TextBlock Text="{x:Bind Collected, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
+                                    </StackPanel>
                                 </StackPanel>
                                 <Line Grid.Column ="2" Stretch ="Fill" StrokeThickness ="2" X1 ="1" VerticalAlignment ="Center" Opacity="0" Height="2"/>
                                 <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                    <Button Content="-" ToolTipService.ToolTip="减一件" Height="30" Width="30" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,5,0"/>
-                                    <TextBox x:Name="orderNum" Text="1" ToolTipService.ToolTip="数量" Height="25" Width ="25" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Center" Margin="0,0,5,0" />
-                                    <Button Content="+" Height="30" Width="30" ToolTipService.ToolTip="加一件" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}"/>
-                                    <AppBarButton Grid.Column="3" Icon="Setting" IsCompact="True" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40">
+                                    <Button Content="-" DataContext="{x:Bind OrderId}" ToolTipService.ToolTip="减一件" Height="28" Width="28" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Click="subtractItem"/>
+                                    <TextBlock Text="{x:Bind Ordered, Mode=OneWay}" Style="{StaticResource ListSubTitleStyle}" VerticalAlignment="Center" Margin="10,0,10,0" FontSize="19"/>
+                                    <Button Content="+" DataContext="{x:Bind OrderId}" Height="28" Width="28" ToolTipService.ToolTip="加一件" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Click="addItem"/>
+                                    <AppBarButton Grid.Column="3" Icon="Setting" IsCompact="True" VerticalAlignment="Center" HorizontalAlignment="Center" Width="40" Height="40" Margin="0,0,0,8" >
                                         <AppBarButton.Flyout>
                                             <MenuFlyout>
-                                                <MenuFlyoutItem Text="Delete"/>
-                                                <MenuFlyoutItem Text="Share"/>
+                                                <MenuFlyoutItem Text="Delete" Click="deleteItem"/>
+                                                <MenuFlyoutItem Text="Share" Click="shareItem"/>
                                             </MenuFlyout>
                                         </AppBarButton.Flyout>
                                     </AppBarButton>
@@ -188,8 +214,9 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </ScrollViewer>
+            <Line Grid.Column="0" Grid.Row="2" x:Name ="akg" Stroke ="White" Height="0" Width="0" Visibility="Collapsed"/>
             <Grid Grid.Row="3" Grid.Column="1">
-                <Button x:Name="deleteall" Style="{StaticResource ButtonRevealStyle}" Content="Delete all Items" HorizontalAlignment="Left" Background="BurlyWood" VerticalAlignment="Center" FontSize="{StaticResource MediumFontSize}" Height="30"/>
+                <Button x:Name="deleteall" Style="{StaticResource ButtonRevealStyle}" Content="删除所有菜品" HorizontalAlignment="Left" Background="BurlyWood" VerticalAlignment="Center" FontSize="{StaticResource MediumFontSize}" Height="30" Click="DeleteAllItems"/>
             </Grid>
             <Grid Padding="5,5,5,5" Grid.Column="1" Grid.Row="4">
                 <Grid.Background>
@@ -201,21 +228,20 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Visibility="{Binding ElementName=MyListView, Path=Visibility}">
                     <TextBlock  Text="今天广州气温："  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom"/>
-                    <TextBlock  Text="{x:Bind currentTemporature}"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom"/>
-                    <TextBlock  Text="度"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom"/>
-                    <TextBlock  Text="{x:Bind tips}"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom" Margin="30, 0, 0, 0"/>
+                    <TextBlock x:Name="Temporature"  Text="{x:Bind userManagementInstance.currentTemporature, Mode=OneWay}"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom"/>
+                    <TextBlock x:Name="Tips"  Text="{x:Bind sampleInstance.tips, Mode=OneWay}"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom" Margin="30, 0, 0, 0"/>
                 </StackPanel>
                 <RelativePanel Grid.Row="1" HorizontalAlignment="Stretch" Margin="0, 0, 0, 10">
-                    <ListView Name="MyListView" Width="500" Margin="0, 0, 50, 0"
+                    <ListView Name="MyListView" Width="500" Margin="10,5,10,0"
                             SelectionMode="None" IsItemClickEnabled="True"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.VerticalScrollMode="Disabled"
-                            ItemsSource="{x:Bind SampleItems}"
+                            ItemsSource="{x:Bind sampleInstance.shoppingCartViewItems, Mode=OneWay}"
                             ItemTemplate="{StaticResource DataTemplate}"
                             ItemContainerStyle="{StaticResource HorizontalItemContainerStyle}"
-                            ItemsPanel="{StaticResource HorizontalItemsPanelTemplate}" />
+                            ItemsPanel="{StaticResource HorizontalItemsPanelTemplate}" ItemClick="ShowDetails" />
                     <ScrollViewer Name="message" RelativePanel.RightOf="MyListView" Margin="0, 0, 10, 0">
                         <StackPanel Margin="0, 0, 10, 0">
                             <TextBlock  Text="桌号"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom" Margin="0, 0, 0, 10"/>
@@ -253,19 +279,30 @@
                                     </LinearGradientBrush>
                                 </TextBox.BorderBrush>
                             </TextBox>
+                            <TextBlock  Text="手机"  FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom" Margin="0, 0, 0, 10"/>
+                            <TextBox x:Name="Phone" HorizontalAlignment="Left" PlaceholderText="手机号仅用于接收短信" Height="30"
+                                         Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}"
+                                         FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" >
+                                <TextBox.BorderBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#000000" Offset="1"/>
+                                        <GradientStop Offset="0.96"/>
+                                    </LinearGradientBrush>
+                                </TextBox.BorderBrush>
+                            </TextBox>
                         </StackPanel>
                     </ScrollViewer>
                     <StackPanel Width="auto" Orientation="Horizontal" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True">
                         <TextBlock x:Name="totalSumTitle" Text="总单数：" VerticalAlignment="Top" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock x:Name="toalSum" VerticalAlignment="Bottom"  Text="{x:Bind Sum}" Style="{StaticResource ListSubTitleStyle}" Margin="0, 0, 30, 0"/>
+                        <TextBlock x:Name="toalSum" VerticalAlignment="Bottom"  Text="{x:Bind instance._current.SampleItems.Count, Mode=OneWay}" Style="{StaticResource ListSubTitleStyle}" Margin="0, 0, 30, 0"/>
                         <TextBlock x:Name="totalPriceTitle" Text="总价：" VerticalAlignment="Top" Style="{StaticResource SubtitleTextBlockStyle}"/>
-                        <TextBlock x:Name="toalPrice" VerticalAlignment="Bottom"  Text="{x:Bind TotalPrice}" Style="{StaticResource ListSubTitleStyle}"/>
+                        <TextBlock x:Name="toalPrice" VerticalAlignment="Bottom"  Text="{x:Bind instance._current.Price, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
                     </StackPanel>
                 </RelativePanel>
             </Grid>
             <StackPanel Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button x:Name="cancel" Grid.Column ="2" Style="{StaticResource ButtonRevealStyle}" Content="Cancel" Height="30" Width="80" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Center" Margin="0, 0, 30, 0" VerticalContentAlignment="Center"/>
-                <Button x:Name="create" Grid.Column ="1" Style="{StaticResource ButtonRevealStyle}" Content="Create" Height="30" Width="80" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button x:Name="cancel" Grid.Column ="2" Style="{StaticResource ButtonRevealStyle}" Content="清空信息" Height="35" Width="110" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Center" Margin="0, 0, 30, 0" VerticalContentAlignment="Center" Click="ClearDetails"/>
+                <Button x:Name="create" Grid.Column ="1" Style="{StaticResource ButtonRevealStyle}" Content="创建订单"  Height="35" Width="110" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="CreateUserOrder"/>
             </StackPanel>
         </Grid>
     </Grid>

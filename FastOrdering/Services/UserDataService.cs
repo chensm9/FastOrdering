@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 using FastOrdering.Models;
@@ -11,8 +12,18 @@ namespace FastOrdering.Services
     // TODO WTS: Delete this file once your app is using real data.
     public class UserDataService
     {
-        public UserOrder currentUserOrder;
+        public UserOrder _current = new UserOrder();
+        public ObservableCollection<UserOrder> allItems = new ObservableCollection<UserOrder>();
+        private static UserDataService instance;
 
+        public static UserDataService GetInstance()
+        {
+            if (instance == null)
+            {
+                instance = new UserDataService();
+            }
+            return instance;
+        }
         private static IEnumerable<UserOrder> AllOrders()
         {
             // The following is order summary data

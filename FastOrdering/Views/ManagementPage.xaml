@@ -70,7 +70,7 @@
                     <RelativePanel>
                         <TextBlock x:Name="leftTitle" Text="Management"  FontSize="{StaticResource LargeFontSize}"/>
                         <AutoSuggestBox x:Name="SearchBox" RelativePanel.RightOf="leftTitle" PlaceholderText="Search" QueryIcon="Find" Width="200" Height="35" FontSize="{StaticResource MediumFontSize}"
-                HorizontalAlignment="Right" Margin="10,8,0,0"/>
+                HorizontalAlignment="Right" Margin="10,8,0,0" TextChanged="queryItem"/>
                     </RelativePanel>
                 </Grid>
                 <!--Gird-->
@@ -104,8 +104,8 @@
                                     </StackPanel>
                                     <Line Grid.Column ="2" Stretch ="Fill" StrokeThickness ="2" X1 ="1" VerticalAlignment ="Center" Opacity="0" Height="2"/>
                                     <StackPanel Grid.Column="3" Orientation="Horizontal">
-                                        <Button Content="-" ToolTipService.ToolTip="上移" Height="30" Width="30" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,5,0"/>
-                                        <Button Content="+" ToolTipService.ToolTip="下移" Height="30" Width="30" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}"/>
+                                        <Button DataContext="{x:Bind OrderId, Mode=OneWay}" Content="↑" ToolTipService.ToolTip="上移" Height="30" Width="30" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,5,0" Click="Upward"/>
+                                        <Button DataContext="{x:Bind OrderId, Mode=OneWay}" Content="↓" ToolTipService.ToolTip="下移" Height="30" Width="30" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Click="Downward"/>
                                         <AppBarButton Icon="Setting" IsCompact="True" VerticalAlignment="Center" Height="40" Width="40">
                                             <AppBarButton.Flyout>
                                                 <MenuFlyout>
@@ -121,9 +121,18 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </ScrollViewer>
-                <Grid Grid.Row="3" Grid.Column="1">
-                    <Button x:Name="deleteall" Content="删除所有菜品" HorizontalAlignment="Left" Background="BurlyWood" Style="{StaticResource ButtonRevealStyle}" VerticalAlignment="Center" FontSize="{StaticResource MediumFontSize}" Height="35" Click="clearDataBase"/>
-                </Grid>
+                <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1">
+                    <Button x:Name="deleteall" Height="40" ToolTipService.ToolTip="删除所有菜品" Width="40" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,40,0" Click="clearDataBase" Background="BurlyWood">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
+                    </Button>
+                    <Button x:Name ="DeleteAppBarButton" Height="35" ToolTipService.ToolTip="添加菜品" Width="35" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,15,0" Click="navigate" Visibility="Visible">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
+                    </Button>
+                    <Button x:Name ="delete_bar" Height="35" ToolTipService.ToolTip="删除该菜品" Width="35" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Click="Delete_btn" Visibility="Collapsed">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74D;"/>
+                    </Button>
+                  
+                </StackPanel>
                 <Line x:Name ="akg" Stroke ="White" Height="0" Width="0" Visibility="Collapsed"/>
             </Grid>
             <!--Right-->
@@ -200,11 +209,4 @@
             </Grid>
         </Grid>
     </Grid>
-    <Page.BottomAppBar>
-        <CommandBar>
-            <AppBarButton x:Name ="DeleteAppBarButton" Icon ="Add" Label ="Add" Click="navigate" Visibility="Visible"/>
-            <AppBarButton x:Name ="delete_bar" Icon ="Delete" Label ="Delete" Click="Delete_btn" Visibility="Collapsed"/>
-            <!--Click ="AddAppBarButton_Click"-->
-        </CommandBar>
-    </Page.BottomAppBar>
 </Page>

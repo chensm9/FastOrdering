@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FastOrdering.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using Windows.UI.Xaml.Media;
@@ -11,22 +12,49 @@ namespace FastOrdering.Models
     // It is the model class we use to display data on pages like Grid, Chart, and Master Detail.
     public class UserOrder : INotifyPropertyChanged
     {
-        public static int id = 0;
+        public static int id = GetId();
+        private static int GetId()
+        {
+            if (UserDataService.GetInstance().allItems.Count == 0)
+            {
+                return 0;
+            }
+            int max = 0;
+            for (int i = 0; i < UserDataService.GetInstance().allItems.Count; ++i)
+            {
+                if (UserDataService.GetInstance().allItems[i].OrderId > max)
+                {
+                    max = SampleDataService.GetInstance().allItems[i].OrderId;
+                }
+            }
+            return (max + 1);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         public UserOrder()
         {
-            SampleItems = new ObservableCollection<SampleOrder>
+            UserNum = 0;
+            Table = 0;
+            Pepper = -1;
+            Details = "";
+            Price = 0;
+            SampleItems.Clear();
+        }
+
+        public UserOrder(bool flag)
+        {
+            UserNum = 0;
+            Table = 0;
+            Pepper = -1;
+            Details = "";
+            Price = 0;
+            SampleItems.Clear();
+            if (flag)
             {
-                new SampleOrder
-                    {
-                        OrderName = "寿司",
-                        Price = 19.99f,
-                        Summary = "ddddddddddddddddddd",
-                        Details = "aaa",
-                    },
-            };
-            this.OrderId = id;
-            id++;
+                this.OrderId = id;
+                id++;
+            }
         }
 
         //订单id
@@ -63,8 +91,8 @@ namespace FastOrdering.Models
         }
 
         //辣椒
-        private int pepper_ { get; set; }
-        public int Pepper
+        private double pepper_ { get; set; }
+        public double Pepper
         {
             get
             {
@@ -108,7 +136,18 @@ namespace FastOrdering.Models
             }
         }
 
-        public ObservableCollection<SampleOrder> SampleItems;
+        //重新初始化订单
+        public void Clear()
+        {
+            UserNum = 0;
+            Table = 0;
+            Pepper = -1;
+            Details = "";
+            Price = 0;
+            SampleItems.Clear();
+        }
+
+        public ObservableCollection<SampleOrder> SampleItems = new ObservableCollection<SampleOrder>();
 
         public void NotifyPropertyChanged(string propertyName)
         {

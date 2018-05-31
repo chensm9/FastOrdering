@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FastOrdering.Services;
+using System;
 using System.ComponentModel;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -10,23 +12,53 @@ namespace FastOrdering.Models
     // It is the model class we use to display data on pages like Grid, Chart, and Master Detail.
     public class SampleOrder : INotifyPropertyChanged
     {
-        public static int id = 0;
+        public static int id = GetId();
         public string imgPath;
         public event PropertyChangedEventHandler PropertyChanged;
         public SampleOrder()
         {
             string ImgSource = "ms-appx:///Assets/newOne.jpg";
             this.Pict = new BitmapImage(new Uri(ImgSource));
-            this.OrderId = id;
-            id++;
             Visited = 0;
             Collected = 0;
+            Ordered = 0;
+        }
+        private static int GetId()
+        {
+            if (SampleDataService.GetInstance().allItems.Count == 0)
+            {
+                return 0;
+            }
+            int max = 0;
+            for(int i = 0; i < SampleDataService.GetInstance().allItems.Count; ++i)
+            {
+                if(SampleDataService.GetInstance().allItems[i].OrderId > max)
+                {
+                    max = SampleDataService.GetInstance().allItems[i].OrderId;
+                }
+            }
+            return (max + 1);
         }
 
-        //商品id
+        public SampleOrder(bool flag)
+        {
+            string ImgSource = "ms-appx:///Assets/newOne.jpg";
+            this.Pict = new BitmapImage(new Uri(ImgSource));
+            Visited = 0;
+            Collected = 0;
+            Ordered = 0;
+            //添加菜品时创建
+            if (flag)
+            {
+                this.OrderId = id;
+                id++;
+            }
+        }
+
+        //菜品id
         public int OrderId { get; set; }
 
-        //商品名
+        //菜品名
         private string orderName_ { get; set; }
         public string OrderName
         {
@@ -158,6 +190,28 @@ namespace FastOrdering.Models
             {
                 this.summary_ = value;
                 NotifyPropertyChanged("Summary");
+            }
+        }
+
+        //点餐数量
+        private int ordered_ { get; set; }
+        public int Ordered
+        {
+            get
+            {
+                return this.ordered_;
+            }
+            set
+            {
+                if(value > 99 || value < 0)
+                {
+                    this.ordered_ = 1;
+                }
+                else
+                {
+                    this.ordered_ = value;  
+                }
+                NotifyPropertyChanged("Ordered");
             }
         }
 

@@ -15,6 +15,8 @@ namespace FastOrdering.Services
         public bool isUser, isSupplier, isLogOn, isEdit;
         public string userName, password;
         public event PropertyChangedEventHandler PropertyChanged;
+        //用于防止多次点赞
+        public bool returnMain;
 
         //页面导航元素是否可见
         private Visibility sampleOrderVisible_;
@@ -22,15 +24,32 @@ namespace FastOrdering.Services
         private Visibility logOnVisible_;
         private Visibility orderViewVisible_;
         private Visibility managementVisible_;
+        //当前天气
+        public String currentTemporature = "";
+        //验证码
+        public String VertificationCode = "";
+
+        public void GetVertificationCode()
+        {
+            Random rd = new Random();
+            VertificationCode = rd.Next(100000, 999999).ToString();
+        }
 
         //单例模式
-        public static UserManagement getInstance()
+        public static UserManagement GetInstance()
         {
             if (instance == null)
             {
                 instance = new UserManagement();
             }
             return instance;
+        }
+
+        //天气查询
+        private async void queryWeather()
+        {
+            RootObject myWeather = await Weather.GetWeather("广州");
+            currentTemporature = myWeather.result.today.temperature;
         }
 
         private UserManagement()
@@ -51,6 +70,7 @@ namespace FastOrdering.Services
             LogOnVisible = Visibility.Collapsed;
             OrderViewVisible = Visibility.Collapsed;
             ManagementVisible = Visibility.Collapsed;
+            queryWeather();
         }
 
 
@@ -60,7 +80,8 @@ namespace FastOrdering.Services
             isUser = true;
             isSupplier = false;
             isLogOn = false;
-
+            //清空购物车菜品
+            UserDataService.GetInstance()._current.SampleItems.Clear();
             SampleOrderVisible = Visibility.Visible;
             ShoppingCartVisible = Visibility.Visible;
             LogOnVisible = Visibility.Collapsed;

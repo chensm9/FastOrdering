@@ -66,7 +66,7 @@
         </VisualStateManager.VisualStateGroups>
         <controls:MasterDetailsView
             x:Name="MasterDetailsViewControl"
-            ItemsSource="{x:Bind SampleItems}"
+            ItemsSource="{x:Bind instance.allItems}"
             SelectedItem="{x:Bind Selected, Mode=TwoWay}"
             ItemTemplate="{StaticResource ItemTemplate}"
             DetailsTemplate="{StaticResource DetailsTemplate}"

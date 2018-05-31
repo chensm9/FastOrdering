@@ -26,11 +26,11 @@ namespace FastOrdering.Views
         //是否添加了图片
         public bool isAddPic = false;
         //单实例
-        SampleDataService instance = SampleDataService.getInstance();
+        SampleDataService instance = SampleDataService.GetInstance();
         //默认的图片uri
         private string defaultpath = "ms-appx:///Assets/newOne.jpg";
         //mySQL
-        private SampleOrderSQLManagement mySQL = SampleOrderSQLManagement.getInstance();
+        private SampleOrderSQLManagement mySQL = SampleOrderSQLManagement.GetInstance();
         private bool isEdit = false;
 
         public ManagementPage()
@@ -38,15 +38,6 @@ namespace FastOrdering.Views
             InitializeComponent();
             ImageSource Pict = new BitmapImage(new Uri(defaultpath));
             myImg.Source = Pict;
-            mySQL.getAll();
-            if (instance.allItems.Count != 0)
-            {
-                instance.allItems.Clear();
-            }
-            for (int i = 0; i < mySQL.allItems.Count; i++)
-            {
-                instance.allItems.Add(mySQL.allItems[i]);
-            }
             //Loaded += Management_Loaded;
         }
 
@@ -221,7 +212,7 @@ namespace FastOrdering.Views
         }
 
         //清除右边的编辑栏
-        private void clear()
+        private void Clear()
         {
             create.Content = "创建";
             title.Text = "";
@@ -287,7 +278,7 @@ namespace FastOrdering.Views
         {
             ContentDialog ErrorPrice = new ContentDialog()
             {
-                Title = "非法价格",
+                Title = "非法价格输入",
                 Content = "请输入大于0的价格",
                 PrimaryButtonText = "好"
             };
@@ -299,7 +290,7 @@ namespace FastOrdering.Views
         {
             ContentDialog ErrTransform = new ContentDialog()
             {
-                Title = "非法价格",
+                Title = "非法价格输入",
                 Content = "请输入数字",
                 PrimaryButtonText = "好"
             };
@@ -307,7 +298,7 @@ namespace FastOrdering.Views
         }
 
         //成功添加或者修改item
-        private async void AccessDate()
+        private async void AccessItem()
         {
             isEdit = false;
             //成功创建item后可以删除临时图片的Token，addPic为false
@@ -318,15 +309,14 @@ namespace FastOrdering.Views
             //判断此时是创建还是修改
             if ((string)create.Content == "创建")
             {
-                SampleOrder newOne = new SampleOrder
-                {
-                    OrderName = title.Text,
-                    Price = Convert.ToSingle(price.Text),
-                    Summary = summary.Text,
-                    Details = details.Text,
-                    Pict = new BitmapImage(new Uri(defaultpath)),
-                    imgPath = defaultpath
-                };
+                //添加项目，id+1
+                SampleOrder newOne = new SampleOrder(true);
+                newOne.OrderName = title.Text;
+                newOne.Price = Convert.ToSingle(price.Text);
+                newOne.Summary = summary.Text;
+                newOne.Details = details.Text;
+                newOne.Pict = new BitmapImage(new Uri(defaultpath));
+                newOne.imgPath = defaultpath;
                 mySQL.insert(newOne);
                 instance.allItems.Add(newOne);
                 //更新磁贴
@@ -337,7 +327,7 @@ namespace FastOrdering.Views
                     Content = "您的菜品已经添加成功",
                     PrimaryButtonText = "好"
                 };
-                clear();
+                Clear();
                 await AccessDate.ShowAsync();
             }
             else//修改item
@@ -352,7 +342,7 @@ namespace FastOrdering.Views
                 //隐藏删除按钮
                 delete_bar.Visibility = Visibility.Collapsed;
                 //清空创建界面
-                clear();
+                Clear();
                 //更新磁贴
                 //instance.newTile();
                 ContentDialog AccessDate = new ContentDialog()
@@ -404,13 +394,13 @@ namespace FastOrdering.Views
                 {
                     ErrorPrice();
                 }
-                else AccessDate();
+                else AccessItem();
             }
         }
 
         private void cancelBtn(object sender, RoutedEventArgs e)
         {
-            clear();
+            Clear();
             if (isEdit) create.Content = "Update";
             else create.Content = "Create";
         }
@@ -429,12 +419,12 @@ namespace FastOrdering.Views
             {
                 //显示详情
                 create.Content = "修改";
-            delete_bar.Visibility = Visibility.Visible;
-            title.Text = instance._current.OrderName;
-            price.Text = instance._current.Price.ToString();
-            summary.Text = instance._current.Summary;
-            details.Text = instance._current.Details;
-            myImg.Source = instance._current.Pict;
+                delete_bar.Visibility = Visibility.Visible;
+                title.Text = instance._current.OrderName;
+                price.Text = instance._current.Price.ToString();
+                summary.Text = instance._current.Summary;
+                details.Text = instance._current.Details;
+                myImg.Source = instance._current.Pict;
             }
             else//跳转
             {
@@ -448,18 +438,20 @@ namespace FastOrdering.Views
             var originalSource = e.OriginalSource as MenuFlyoutItem;
             SampleOrder data = (SampleOrder)originalSource.DataContext;
             instance._current = data;
+            ContentDialog ErrorDialog = new ContentDialog
+            {
+                Title = "注意！删除",
+                Content = "你将会删除该菜品",
+                PrimaryButtonText = "取消",
+                SecondaryButtonText = "确认删除"
+            };
+            ContentDialogResult result = await ErrorDialog.ShowAsync();
+            if (result == ContentDialogResult.Primary) return;
             mySQL.delete(data.OrderId);
             instance.allItems.Remove(instance._current);
-            clear();
+            Clear();
             //instance.newTile();
-            delete_bar.Visibility = Visibility.Collapsed;
-            ContentDialog Delete_btn = new ContentDialog
-            {
-                Title = "删除成功",
-                Content = "您的菜品已经删除成功",
-                PrimaryButtonText = "好"
-            };
-            await Delete_btn.ShowAsync();
+            delete_bar.Visibility = Visibility.Collapsed;  
         }
 
         //分享按钮
@@ -478,7 +470,7 @@ namespace FastOrdering.Views
         {
             //标题
             DataRequest request = args.Request;
-            request.Data.Properties.Title = "我发现这家小店这一道菜非常棒！\n菜品名：" + instance._current.OrderName + "\n";
+            request.Data.Properties.Title = "我家小店这一道菜非常棒！\n菜品名：" + instance._current.OrderName + "\n";
             //详情
             string send = instance._current.Summary + "\n" + instance._current.Details;
             request.Data.SetText(send);
@@ -519,7 +511,8 @@ namespace FastOrdering.Views
             mySQL.clear();
             instance.allItems.Clear();
             isEdit = false;
-            clear();
+            Clear();
+            SampleOrder.id = 0;
             //instance.newTile();
         }
 
@@ -554,7 +547,7 @@ namespace FastOrdering.Views
             //如果窗口大小比较大则弹出右侧的新建窗口
             if (Window.Current.Bounds.Width >= 1200)
             {
-                clear();
+                Clear();
 
                 //隐藏下方bar的删除按钮
                 delete_bar.Visibility = Visibility.Collapsed;
@@ -569,19 +562,96 @@ namespace FastOrdering.Views
         //点击下方bar的删除按钮
         private async void Delete_btn(object sender, RoutedEventArgs e)
         {
+            ContentDialog ErrorDialog = new ContentDialog
+            {
+                Title = "注意！删除",
+                Content = "你将会删除该菜品",
+                PrimaryButtonText = "取消",
+                SecondaryButtonText = "确认删除"
+            };
+            ContentDialogResult result = await ErrorDialog.ShowAsync();
+            if (result == ContentDialogResult.Primary) return;
             isEdit = false;
             mySQL.delete(instance._current.OrderId);
             instance.allItems.Remove(instance._current);
-            clear();
+            Clear();
             //instance.newTile();
             delete_bar.Visibility = Visibility.Collapsed;
-            ContentDialog Delete_btn = new ContentDialog
+
+        }
+
+        //数据库模糊搜索
+        private void queryItem(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            var text = SearchBox.Text;
+            instance.allItems.Clear();
+            if (text != "")
             {
-                Title = "删除成功",
-                Content = "成功删除菜品",
-                PrimaryButtonText = "好"
-            };
-            await Delete_btn.ShowAsync();
+                mySQL.queryItem(text);
+                if (mySQL.allItems.Count == 0) return;
+            }
+            else mySQL.GetAll();
+            for (int i = 0; i < mySQL.allItems.Count; i++)
+            {
+                instance.allItems.Add(mySQL.allItems[i]);
+            }
+        }
+
+        //项目上移
+        private void Upward(object sender, RoutedEventArgs e)
+        {
+            var originalSource = e.OriginalSource as Button;
+            int currentID = (int)originalSource.DataContext;
+            int pos = -1;
+            //利用id的唯一性，寻找该菜品在菜单中的位置
+            for (int i = 0; i < instance.allItems.Count; ++i)
+            {
+                if (instance.allItems[i].OrderId == currentID)
+                {
+                    pos = i;
+                }
+            }
+            if(pos == 0)
+            {
+                return;
+            }
+            else
+            {
+                SampleOrder newItem = instance.allItems[pos];
+                instance.allItems[pos] = instance.allItems[pos - 1];
+                instance.allItems[pos - 1] = newItem;
+                mySQL.update(instance.allItems[pos - 1]);
+                mySQL.update(instance.allItems[pos]);
+
+            }
+        }
+
+        private void Downward(object sender, RoutedEventArgs e)
+        {
+
+            var originalSource = e.OriginalSource as Button;
+            int currentID = (int)originalSource.DataContext;
+            int pos = -1;
+            //利用id的唯一性，寻找该菜品在菜单中的位置
+            for (int i = 0; i < instance.allItems.Count; ++i)
+            {
+                if (instance.allItems[i].OrderId == currentID)
+                {
+                    pos = i;
+                }
+            }
+            if (pos == instance.allItems.Count - 1)
+            {
+                return;
+            }
+            else
+            {
+                SampleOrder newItem = instance.allItems[pos];
+                instance.allItems[pos] = instance.allItems[pos + 1];
+                instance.allItems[pos + 1] = newItem;
+                mySQL.update(instance.allItems[pos + 1]);
+                mySQL.update(instance.allItems[pos]);
+            }         
         }
     }
 }

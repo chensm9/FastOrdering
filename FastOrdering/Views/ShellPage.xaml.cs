@@ -7,7 +7,9 @@ using System.Runtime.CompilerServices;
 
 using FastOrdering.Helpers;
 using FastOrdering.Services;
+
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+
 using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -19,7 +21,7 @@ namespace FastOrdering.Views
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
         //页面导航元素是否可见
-        public UserManagement UM = UserManagement.getInstance();
+        public UserManagement UM = UserManagement.GetInstance();
 
         private NavigationViewItem _selected;
 
@@ -45,6 +47,12 @@ namespace FastOrdering.Views
 
         private void Frame_Navigated(object sender, NavigationEventArgs e)
         {
+            if (e.SourcePageType == typeof(SettingsPage))
+            {
+                Selected = navigationView.SettingsItem as NavigationViewItem;
+                return;
+            }
+
             Selected = navigationView.MenuItems
                             .OfType<NavigationViewItem>()
                             .FirstOrDefault(menuItem => IsMenuItemForPageType(menuItem, e.SourcePageType));
@@ -58,6 +66,12 @@ namespace FastOrdering.Views
 
         private void OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
+            if (args.IsSettingsInvoked)
+            {
+                NavigationService.Navigate(typeof(SettingsPage));
+                return;
+            }
+
             var item = navigationView.MenuItems
                             .OfType<NavigationViewItem>()
                             .First(menuItem => (string)menuItem.Content == (string)args.InvokedItem);

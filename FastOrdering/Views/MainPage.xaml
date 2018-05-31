@@ -11,8 +11,12 @@
         <!--数据绑定模板-->
         <DataTemplate x:Key="DataTemplate" x:DataType="md:SampleOrder">
             <StackPanel Margin="8">
-                <Image Source="{x:Bind Pict}" HorizontalAlignment="Center" Margin="0,0,0,5" Width="90" />
-                <TextBlock Text="{x:Bind Summary}" Style="{StaticResource ListSubTitleStyle}"/>
+                <Image Source="{x:Bind Pict}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,5,0,5" Width="80" />
+                <TextBlock Text="{x:Bind OrderName}" Style="{StaticResource ListTitleStyle}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="价格：" Style="{StaticResource ListTitleStyle}" Margin="10,0,0,0"/>
+                    <TextBlock Text="{x:Bind Price, Mode=TwoWay}" Style="{StaticResource ListSubTitleStyle}"/>
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
 
@@ -71,7 +75,7 @@
                         <Setter Target="owner.FontSize" Value="{StaticResource MediumFontSize}"/>
                     </VisualState.Setters>
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1300" MinWindowHeight="800"/>
+                        <AdaptiveTrigger MinWindowWidth="1300" MinWindowHeight="680"/>
                     </VisualState.StateTriggers>
                 </VisualState>
             </VisualStateGroup>
@@ -94,30 +98,31 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="20" />
             </Grid.ColumnDefinitions>
-            <Image ToolTipService.ToolTip="我是买家" Name="Title" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Source="../Assets/title.png" />
-            <Image ToolTipService.ToolTip="我是卖家" Name ="subTitle" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Source="../Assets/subtitle.png"/>
+            <Image Name="Title" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top" Source="../Assets/title.png" />
+            <Image Name ="subTitle" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Source="../Assets/subtitle.png"/>
             <AppBarButton Name="logIn" ToolTipService.ToolTip="登录或退出" Grid.Row="0" Grid.Column="1" Icon="Contact" HorizontalAlignment="Right" VerticalAlignment="Top" Click="logOnOrLogOut" />
             <Grid Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <Image x:Name="buyer" Source="../Assets/buyer.png" Margin="0, 0, 50, 0" Tapped="navigateToOrderPage" PointerMoved="mouseChangeBuyer"/>
-                    <Image x:Name ="supplier" Source="../Assets/supplier.png" VerticalAlignment="Bottom" Tapped="navigateToLogOn" PointerMoved="mouseChangeSupplier" />
+                    <Image x:Name="buyer" ToolTipService.ToolTip="我是买家" Source="../Assets/buyer.png" Margin="0, 0, 50, 0" Tapped="navigateToOrderPage" PointerMoved="mouseChangeBuyer" PointerExited="changeToArrow"/>
+                    <Image x:Name ="supplier" Source="../Assets/supplier.png" ToolTipService.ToolTip="我是卖家" VerticalAlignment="Bottom" Tapped="navigateToLogOn" PointerMoved="mouseChangeSupplier" PointerExited="ChangeToArrow2" />
                 </StackPanel>
             </Grid>
             <StackPanel x:Name="sampleList" Grid.Row ="5" Grid.Column ="1" Margin="50, 20, 50, 0" HorizontalAlignment="Left"
                             VerticalAlignment="Top" Visibility="Visible">
-                <TextBlock x:Name ="rightTitle"  Text="猜你喜欢" Margin="0, 0, 0, 20" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <TextBlock x:Name ="rightTitle"  Text="人气之王" Margin="0, 0, 0, 10" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                 <ListView Name="MyListView" Grid.Row="1"
                             SelectionMode="None" IsItemClickEnabled="True"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             ScrollViewer.HorizontalScrollMode="Enabled" ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             ScrollViewer.VerticalScrollMode="Disabled"
-                            ItemsSource="{x:Bind SampleItems}"
+                            ItemsSource="{x:Bind instance.mainPageViewItems}"
                             ItemTemplate="{StaticResource DataTemplate}"
                             ItemContainerStyle="{StaticResource HorizontalItemContainerStyle}"
-                            ItemsPanel="{StaticResource HorizontalItemsPanelTemplate}" />
+                            ItemsPanel="{StaticResource HorizontalItemsPanelTemplate}"
+                            ItemClick="ShowDetails"
+                          />
             </StackPanel>
-            <TextBlock x:Name="owner" Grid.Row ="5" Grid.Column ="1" Text="版权所有 仙草开发小组 2018" Margin="0, 0, 0, 20" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
         </Grid>
     </Grid>
 </Page>
