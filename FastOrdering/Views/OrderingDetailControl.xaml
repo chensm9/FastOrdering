@@ -46,17 +46,17 @@
                         <Button Height="40" ToolTipService.ToolTip="刷新" Width="40" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,10,0">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>
                         </Button>
-                        <Button Height="45" ToolTipService.ToolTip="赞" Width="45" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,10,0">
+                        <Button Height="45" ToolTipService.ToolTip="赞" Width="45" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,0,10,0" Click="Collected">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8E1;"/>
                         </Button>
-                        <Button Height="50" Width="50" ToolTipService.ToolTip="加入购物车" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}">
+                        <Button Height="50" Width="50" ToolTipService.ToolTip="加入购物车" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Click="AddToCart">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE710;"/>
                         </Button>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
             <StackPanel Name="block" Padding="0,15,0,0">
-                <TextBlock Text="商品名" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                <TextBlock Text="菜品名" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 <TextBlock Text="{x:Bind MasterMenuItem.OrderName, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
                 <TextBlock Text="月销量" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
                 <TextBlock Text="{x:Bind MasterMenuItem.Sold, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />

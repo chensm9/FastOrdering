@@ -34,11 +34,11 @@ namespace FastOrdering.Views
         //是否添加了图片
         public bool isAddPic = false;
         //单实例
-        SampleDataService instance = SampleDataService.getInstance();
+        SampleDataService instance = SampleDataService.GetInstance();
         //默认的图片uri
         private string defaultpath = "ms-appx:///Assets/newOne.jpg";
         //mySQL
-        private SampleOrderSQLManagement mySQL = SampleOrderSQLManagement.getInstance();
+        private SampleOrderSQLManagement mySQL = SampleOrderSQLManagement.GetInstance();
 
         public EditPage()
         {
@@ -175,7 +175,7 @@ namespace FastOrdering.Views
         }
 
         //清除右边的编辑栏
-        private void clear()
+        private void Clear()
         {
             create.Content = "创建";
             title.Text = "";
@@ -261,7 +261,7 @@ namespace FastOrdering.Views
         }
 
         //成功添加或者修改item
-        private async void AccessDate()
+        private async void AccessItem()
         {
             //成功创建item后可以删除临时图片的Token，addPic为false
             if (ApplicationData.Current.LocalSettings.Values.ContainsKey("MyToken"))
@@ -271,15 +271,14 @@ namespace FastOrdering.Views
             //判断此时是创建还是修改
             if ((string)create.Content == "创建")
             {
-                SampleOrder newOne = new SampleOrder
-                {
-                    OrderName = title.Text,
-                    Price = Convert.ToSingle(price.Text),
-                    Summary = summary.Text,
-                    Details = details.Text,
-                    Pict = new BitmapImage(new Uri(defaultpath)),
-                    imgPath = defaultpath
-                };
+                //添加项目，id+1
+                SampleOrder newOne = new SampleOrder(true);
+                newOne.OrderName = title.Text;
+                newOne.Price = Convert.ToSingle(price.Text);
+                newOne.Summary = summary.Text;
+                newOne.Details = details.Text;
+                newOne.Pict = new BitmapImage(new Uri(defaultpath));
+                newOne.imgPath = defaultpath;
                 mySQL.insert(newOne);
                 instance.allItems.Add(newOne);
                 //更新磁贴
@@ -290,7 +289,7 @@ namespace FastOrdering.Views
                     Content = "您的菜品已经添加成功",
                     PrimaryButtonText = "好"
                 };
-                clear();
+                Clear();
                 await AccessDate.ShowAsync();
             }
             else//修改item
@@ -305,7 +304,7 @@ namespace FastOrdering.Views
                 //隐藏删除按钮
                 delete_bar.Visibility = Visibility.Collapsed;
                 //清空创建界面
-                clear();
+                Clear();
                 //更新磁贴
                 //instance.newTile();
                 ContentDialog AccessDate = new ContentDialog()
@@ -362,7 +361,7 @@ namespace FastOrdering.Views
                 {
                     ErrorPrice();
                 }
-                else AccessDate();
+                else AccessItem();
             }
         }
 
@@ -374,45 +373,27 @@ namespace FastOrdering.Views
             }
         }
 
-        private async void deleteItem(object sender, RoutedEventArgs e)
+        //点击下方bar的删除按钮
+        private async void Delete_btn(object sender, RoutedEventArgs e)
         {
-            DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            var originalSource = e.OriginalSource as MenuFlyoutItem;
-            SampleOrder data = (SampleOrder)originalSource.DataContext;
-            instance._current = data;
-            mySQL.delete(data.OrderId);
+            ContentDialog ErrorDialog = new ContentDialog
+            {
+                Title = "注意！删除",
+                Content = "你将会删除该菜品",
+                PrimaryButtonText = "取消",
+                SecondaryButtonText = "确认删除"
+            };
+            ContentDialogResult result = await ErrorDialog.ShowAsync();
+            if (result == ContentDialogResult.Primary) return;
+            mySQL.delete(instance._current.OrderId);
             instance.allItems.Remove(instance._current);
-            clear();
+            Clear();
             //instance.newTile();
             delete_bar.Visibility = Visibility.Collapsed;
-            ContentDialog Delete_btn = new ContentDialog
-            {
-                Title = "删除成功",
-                Content = "您的菜品已经删除成功",
-                PrimaryButtonText = "好"
-            };
-            await Delete_btn.ShowAsync();
             if (NavigationService.CanGoBack)
             {
                 NavigationService.GoBack();
             }
-        }
-
-        //点击下方bar的删除按钮
-        private async void Delete_btn(object sender, RoutedEventArgs e)
-        {
-            mySQL.delete(instance._current.OrderId);
-            instance.allItems.Remove(instance._current);
-            clear();
-            //instance.newTile();
-            delete_bar.Visibility = Visibility.Collapsed;
-            ContentDialog Delete_btn = new ContentDialog
-            {
-                Title = "删除成功",
-                Content = "成功删除菜品",
-                PrimaryButtonText = "好"
-            };
-            await Delete_btn.ShowAsync();
         }
     }
 }

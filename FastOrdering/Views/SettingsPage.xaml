@@ -1,0 +1,109 @@
+﻿<Page
+    x:Class="FastOrdering.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    xmlns:helper="using:FastOrdering.Helpers"
+    xmlns:xaml="using:Windows.UI.Xaml"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <helper:EnumToBooleanConverter x:Key="EnumToBooleanConverter" EnumType="ElementTheme" />
+    </Page.Resources>
+    <Grid Margin="{StaticResource MediumLeftRightMargin}">
+        <Grid.ColumnDefinitions>
+                <ColumnDefinition Width = "10"/>
+                <ColumnDefinition Width = "*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height ="*"/>
+                <RowDefinition Height="10"/>
+            </Grid.RowDefinitions>
+        <TextBlock  Grid.Column="1"  Grid.Row="0"
+                Text="用户设置"
+                Style="{StaticResource TitleTextBlockStyle}" />
+        <ScrollViewer Grid.Column="1" Grid.Row="1" Height="Auto">
+            <Grid>
+                <StackPanel>
+                    <StackPanel x:Name="UserSettings" Visibility="Collapsed">
+                        <StackPanel x:Name="userNameSetting" Margin="20,24,0,20" >
+                            <TextBlock  Text="用户名设置"  Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock  Text="原用户名："  Style="{StaticResource ListSubTitleStyle}" VerticalAlignment="Bottom" Margin="0, 0, 0, 10"/>
+                                <TextBlock  Text="{x:Bind instance.userName, Mode=TwoWay}"  Style="{StaticResource ListSubTitleStyle}" VerticalAlignment="Bottom" Margin="0, 0, 0, 10"/>
+                            </StackPanel>
+                            <TextBox x:Name="Username" HorizontalAlignment="Left" PlaceholderText="新建用户名" Height="30"
+                                         Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}"
+                                         FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" >
+                                <TextBox.BorderBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#000000" Offset="1"/>
+                                        <GradientStop Offset="0.96"/>
+                                    </LinearGradientBrush>
+                                </TextBox.BorderBrush>
+                            </TextBox>
+                        </StackPanel>
+                        <StackPanel x:Name="passwordSetting" Margin="15,0,0,11">
+                            <TextBlock  Text="密码设置"  Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+                            <PasswordBox x:Name="Password" HorizontalAlignment="Left" PlaceholderText="密码" Height="30"
+                                         Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}"
+                                         FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" >
+                                <PasswordBox.BorderBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#000000" Offset="1"/>
+                                        <GradientStop Offset="0.96"/>
+                                    </LinearGradientBrush>
+                                </PasswordBox.BorderBrush>
+                            </PasswordBox>
+                            <PasswordBox x:Name="PasswordAgain" HorizontalAlignment="Left" PlaceholderText="再次输入密码" Height="30"
+                                         Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}"
+                                         FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" Margin="0,15,0,0" >
+                                <PasswordBox.BorderBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#000000" Offset="1"/>
+                                        <GradientStop Offset="0.96"/>
+                                    </LinearGradientBrush>
+                                </PasswordBox.BorderBrush>
+                            </PasswordBox>
+                        </StackPanel>
+                        <StackPanel x:Name="userPhoneSetting" Margin="20,15,0,20">
+                            <TextBlock  Text="手机号码设置"  Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Bottom" Margin="0,0,0,20"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock  Text="预留手机号："  Style="{StaticResource ListSubTitleStyle}" VerticalAlignment="Bottom" Margin="0, 0, 0, 10"/>
+                                <TextBlock  Text="{x:Bind instance.userPhone, Mode=TwoWay}"  Style="{StaticResource ListSubTitleStyle}" VerticalAlignment="Bottom" Margin="0, 0, 0, 10"/>
+                            </StackPanel>
+                            <TextBox x:Name="Phone" HorizontalAlignment="Left" PlaceholderText="新建手机号" Height="30"
+                                         Width ="300" FontSize="{StaticResource MediumFontSize}" Background="{x:Null}"
+                                         FocusVisualSecondaryBrush="{x:Null}" FocusVisualPrimaryBrush="#FF666666" Foreground="#FF666666" >
+                                <TextBox.BorderBrush>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="#000000" Offset="1"/>
+                                        <GradientStop Offset="0.96"/>
+                                    </LinearGradientBrush>
+                                </TextBox.BorderBrush>
+                            </TextBox>
+                        </StackPanel>
+                        <Button x:Name="create" Grid.Column ="1" Style="{StaticResource ButtonRevealStyle}" Content="确认修改"  Height="35" Width="110" FontSize="{StaticResource MediumFontSize}" VerticalAlignment="Center" VerticalContentAlignment="Center" Click="EditUserSettings" Margin="0,0,0,48"/>
+                    </StackPanel>
+                    <StackPanel x:Name="AboutMe">
+                        <TextBlock
+                    x:Uid="Settings_About"
+                    Style="{StaticResource SubtitleTextBlockStyle}"/>
+                        <StackPanel Margin="{StaticResource EightTopMargin}">
+                            <TextBlock
+                    Text="{x:Bind VersionDescription, Mode=OneWay}" />
+                            <TextBlock
+                    x:Uid="Settings_AboutDescription"
+                    Margin="{StaticResource EightTopMargin}" Text="{x:Bind DetailDescription, Mode=OneWay}"/>
+                            <HyperlinkButton
+                    x:Uid="Settings_PrivacyTermsLink" 
+                    Margin="{StaticResource EightTopMargin}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

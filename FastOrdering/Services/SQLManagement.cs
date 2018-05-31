@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace FastOrdering
 {
+    //存放菜品的数据库的管理
     public class SampleOrderSQLManagement
     {
 
@@ -19,9 +20,9 @@ namespace FastOrdering
         private static String DB_NAME = "SampleOrder.db";
         private static String TABLE_NAME = "SampleOrder";
         private static String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (ORDERID TEXT, ORDERNAME TEXT, SOLD TEXT, " +
-            "VISITED TEXT, COLLECTED TEXT, PRICE TEXT, PICT TEXT, DETAILS TEXT, SUMMARY TEXT)";
-        private static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (ORDERID, ORDERNAME, SOLD, VISITED, COLLECTED, PRICE, PICT, DETAILS, SUMMARY) VALUES(?,?,?,?,?,?,?,?,?)";
-        private static String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET ORDERNAME = ?, SOLD = ?, VISITED = ?, COLLECTED = ?, PRICE = ?, PICT = ?, DETAILS = ?, SUMMARY = ? WHERE ORDERID = ?";
+            "VISITED TEXT, COLLECTED TEXT, PRICE TEXT, PICT TEXT, DETAILS TEXT, SUMMARY TEXT, ORDERED TEXT)";
+        private static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (ORDERID, ORDERNAME, SOLD, VISITED, COLLECTED, PRICE, PICT, DETAILS, SUMMARY, ORDERED) VALUES(?,?,?,?,?,?,?,?,?,?)";
+        private static String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET ORDERID = ?, ORDERNAME = ?, SOLD = ?, VISITED = ?, COLLECTED = ?, PRICE = ?, PICT = ?, DETAILS = ?, SUMMARY = ?, ORDERED = ? WHERE ORDERID = ?";
         private static String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ORDERID = ?";
         private static String SQL_ALL_VALUE = "SELECT * FROM " + TABLE_NAME;
         private static String SQL_CLEAR = "DELETE FROM " + TABLE_NAME;
@@ -31,7 +32,7 @@ namespace FastOrdering
         private static SampleOrderSQLManagement instance;
 
         //单例模式
-        public static SampleOrderSQLManagement getInstance()
+        public static SampleOrderSQLManagement GetInstance()
         {
             if (instance == null)
             {
@@ -71,6 +72,7 @@ namespace FastOrdering
             string path = newOne.imgPath;
             string details = newOne.Details;
             string summary = newOne.Summary;
+            int ordered = newOne.Ordered;
 
             
             using (var statement = mySQL.Prepare(SQL_INSERT))
@@ -84,6 +86,7 @@ namespace FastOrdering
                 statement.Bind(7, path);
                 statement.Bind(8, details);
                 statement.Bind(9, summary);
+                statement.Bind(10, ordered.ToString());
                 statement.Step();
             }
         }
@@ -110,6 +113,7 @@ namespace FastOrdering
             string path = newOne.imgPath;
             string details = newOne.Details;
             string summary = newOne.Summary;
+            int ordered = newOne.Ordered;
             using (var statement = mySQL.Prepare(SQL_UPDATE))
             {
                 statement.Bind(1, orderId.ToString());
@@ -121,6 +125,8 @@ namespace FastOrdering
                 statement.Bind(7, path);
                 statement.Bind(8, details);
                 statement.Bind(9, summary);
+                statement.Bind(10, ordered.ToString());
+                statement.Bind(11, orderId.ToString());
                 statement.Step();
             }
         }
@@ -129,7 +135,7 @@ namespace FastOrdering
         public void queryItem(string orderName)
         {
             this.allItems.Clear();
-            String SQL_QUERY_VALUE = "SELECT * FROM " + TABLE_NAME + " WHERE TITLE LIKE '%" + orderName + "%';";
+            String SQL_QUERY_VALUE = "SELECT * FROM " + TABLE_NAME + " WHERE ORDERNAME LIKE '%" + orderName + "%';";
             using (var statement = mySQL.Prepare(SQL_QUERY_VALUE))
             {
                 while (SQLiteResult.ROW == statement.Step())
@@ -143,6 +149,7 @@ namespace FastOrdering
                     string getPath = (string)statement[6];
                     string getDetails = (string)statement[7];
                     string getSummary = (string)statement[8];
+                    int getOrdered = int.Parse((string)statement[9]);
                     SampleOrder newOne = new SampleOrder
                     {
                         OrderId = getOrderId,
@@ -155,50 +162,15 @@ namespace FastOrdering
                         Details = getDetails,
                         Summary = getSummary,
                         Pict = new BitmapImage(new Uri(getPath)),
+                        Ordered = getOrdered,
                 };
                     allItems.Add(newOne);
                 }
             }
         }
 
-        //精准查询
-        //查询
-        public void accurateQueryItem(string orderName)
-        {
-            this.allItems.Clear();
-            using (var statement = mySQL.Prepare(SQL_ACCURATE_QUERY_VALUE))
-            {
-                statement.Bind(1, orderName);
-                while (SQLiteResult.ROW == statement.Step())
-                {
-                    int getOrderId = int.Parse((string)statement[0]);
-                    string getOrderName = (string)statement[1];
-                    int getSold = int.Parse((string)statement[2]);
-                    int getVisited = int.Parse((string)statement[3]);
-                    int getCollected = int.Parse((string)statement[4]);
-                    float getPrice = float.Parse((string)statement[5]);
-                    string getPath = (string)statement[6];
-                    string getDetails = (string)statement[7];
-                    string getSummary = (string)statement[8];
-                    SampleOrder newOne = new SampleOrder
-                    {
-                        OrderId = getOrderId,
-                        OrderName = getOrderName,
-                        Sold = getSold,
-                        Visited = getVisited,
-                        Collected = getCollected,
-                        Price = getPrice,
-                        imgPath = getPath,
-                        Details = getDetails,
-                        Summary = getSummary,
-                        Pict = new BitmapImage(new Uri(getPath)),
-                    };
-                    allItems.Add(newOne);
-                }
-            }
-        }
-        //得到全部
-        public void getAll()
+        //得到全部菜品
+        public void GetAll()
         {
             this.allItems.Clear();
             using (var statement = mySQL.Prepare(SQL_ALL_VALUE))
@@ -214,6 +186,7 @@ namespace FastOrdering
                     string getPath = (string)statement[6];
                     string getDetails = (string)statement[7];
                     string getSummary = (string)statement[8];
+                    int getOrdered = int.Parse((string)statement[9]);
                     SampleOrder newOne = new SampleOrder
                     {
                         OrderId = getOrderId,
@@ -226,47 +199,58 @@ namespace FastOrdering
                         Details = getDetails,
                         Summary = getSummary,
                         Pict = new BitmapImage(new Uri(getPath)),
+                        Ordered = getOrdered,
                     };
                     allItems.Add(newOne);
                 }
             }
         }
     }
-    
-    public class UserOrderSQLManagement
+
+    //存放用户信息的数据库
+    public class UserSQLManagement
     {
 
-        //Item
-        public ObservableCollection<UserOrder> allItems = new ObservableCollection<UserOrder>();
 
         //SQL查询模板
-        private static String DB_NAME = "UserOder.db";
-        private static String TABLE_NAME = "UserOrder";
-        private static String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (ORDERID TEXT, USERNUM TEXT, TABLE TEXT, PEPPER TEXT, PRICE TEXT, DETAILS TEXT)";
-        private static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (ORDERID, USERNUM, TABLE, PEPPER, PRICE, DETAILS) VALUES(?,?,?,?,?,?)";
-        private static String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET ORDERID = ?, USERNUM  = ?, TABLE = ?, PEPPER = ?, PRICE = ?, DETAILS = ? WHERE ORDERID = ?";
-        private static String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ORDERID = ?";
-        private static String SQL_ALL_VALUE = "SELECT * FROM " + TABLE_NAME;
+        private static String DB_NAME = "User.db";
+        private static String TABLE_NAME = "User";
+        private static String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (USERNAME TEXT, PASSWORD TEXT, PHONE TEXT)";
+        private static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (USERNAME, PASSWORD, PHONE) VALUES(?,?,?)";
+        private static String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET USERNAME = ?, PASSWORD = ?, PHONE = ? WHERE USERNAME = ?";
         private static String SQL_CLEAR = "DELETE FROM " + TABLE_NAME;
-        private static String SQL_ACCURATE_QUERY_VALUE = "SELECT * FROM " + TABLE_NAME + " WHERE ORDERNAME = ?";
+        private static String SQL_ALL_VALUE = "SELECT * FROM " + TABLE_NAME;
 
         private SQLiteConnection mySQL;
-        private static UserOrderSQLManagement instance;
+        private static UserSQLManagement instance;
 
+        public string getUsername = "";
+        public string getPassword = "";
+        public string getPhone = "";
         //单例模式
-        public static UserOrderSQLManagement getInstance()
+        public static UserSQLManagement GetInstance()
         {
             if (instance == null)
             {
-                instance = new UserOrderSQLManagement();
+                instance = new UserSQLManagement();
             }
             return instance;
         }
 
         //创建表单
-        private UserOrderSQLManagement()
+        private UserSQLManagement()
         {
             mySQL = new SQLiteConnection(DB_NAME);
+            using (var statement = mySQL.Prepare(SQL_CREATE_TABLE))
+            {
+                statement.Step();
+            }
+        }
+
+        //重新新建表
+        public void renew()
+        {
+            clear();
             using (var statement = mySQL.Prepare(SQL_CREATE_TABLE))
             {
                 statement.Step();
@@ -282,88 +266,175 @@ namespace FastOrdering
             }
         }
         //插入表单
-        public void insert(UserOrder newOne)
+        public void insert(string userName, string password, string userPhone)
         {
-            //获得传入实例的值
-            int orderId = newOne.OrderId;
-            int userNum = newOne.UserNum;
-            int table = newOne.Table;
-            int pepper = newOne.Pepper;
-            float price = newOne.Price;
-            string details = newOne.Details;
-
-
             using (var statement = mySQL.Prepare(SQL_INSERT))
             {
-                statement.Bind(1, orderId.ToString());
-                statement.Bind(2, userNum.ToString());
-                statement.Bind(3, table.ToString());
-                statement.Bind(4, pepper.ToString());
-                statement.Bind(5, price.ToString());
-                statement.Bind(6, details);
-                statement.Step();
-            }
-        }
-
-        //删除表单
-        public void delete(int id)
-        {
-            using (var statement = mySQL.Prepare(SQL_DELETE))
-            {
-                statement.Bind(1, id.ToString());
+                statement.Bind(1, userName);
+                statement.Bind(2, password);
+                statement.Bind(3, userPhone);
                 statement.Step();
             }
         }
 
         //更新表单
-        public void update(UserOrder newOne)
+        public void update(string userName, string password, string userPhone)
         {
-            //获得传入实例的值
-            int orderId = newOne.OrderId;
-            int userNum = newOne.UserNum;
-            int table = newOne.Table;
-            int pepper = newOne.Pepper;
-            float price = newOne.Price;
-            string details = newOne.Details;
             using (var statement = mySQL.Prepare(SQL_UPDATE))
             {
-                statement.Bind(1, orderId.ToString());
-                statement.Bind(2, userNum.ToString());
-                statement.Bind(3, table.ToString());
-                statement.Bind(4, pepper.ToString());
-                statement.Bind(5, price.ToString());
-                statement.Bind(6, details);
+                statement.Bind(1, userName);
+                statement.Bind(2, password);
+                statement.Bind(3, userPhone);
+                statement.Bind(4, userName);
                 statement.Step();
             }
         }
 
-        //得到全部
-        public void getAll()
+        public void GetAll()
         {
-            this.allItems.Clear();
             using (var statement = mySQL.Prepare(SQL_ALL_VALUE))
             {
                 while (SQLiteResult.ROW == statement.Step())
                 {
-                    int getOrderId = int.Parse((string)statement[0]);
-                    int getUserNum = int.Parse((string)statement[1]);
-                    int getTable = int.Parse((string)statement[2]);
-                    int getPepper = int.Parse((string)statement[3]);
-                    float getPrice = float.Parse((string)statement[4]);
-                    string getDetails = (string)statement[5];
-                    UserOrder newOne = new UserOrder
-                    {
-                        OrderId = getOrderId,
-                        UserNum = getUserNum,
-                        Table = getTable,
-                        Pepper = getPepper,
-                        Price = getPrice,
-                        Details = getDetails,
-                        
-                    };
-                    allItems.Add(newOne);
+                    getUsername = (string)statement[0];
+                    getPassword = (string)statement[1];
+                    getPhone = (string)statement[2];
                 }
             }
         }
     }
+
+    //public class UserOrderSQLManagement
+    //{
+
+    //    //Item
+    //    public ObservableCollection<UserOrder> allItems = new ObservableCollection<UserOrder>();
+
+    //    //SQL查询模板
+    //    private static String DB_NAME = "UserOder.db";
+    //    private static String TABLE_NAME = "UserOrder";
+    //    private static String SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (ORDERID TEXT, USERNUM TEXT, TABLE TEXT, PEPPER TEXT, PRICE TEXT, DETAILS TEXT)";
+    //    private static String SQL_INSERT = "INSERT INTO " + TABLE_NAME + " (ORDERID, USERNUM, TABLE, PEPPER, PRICE, DETAILS) VALUES(?,?,?,?,?,?)";
+    //    private static String SQL_UPDATE = "UPDATE " + TABLE_NAME + " SET ORDERID = ?, USERNUM  = ?, TABLE = ?, PEPPER = ?, PRICE = ?, DETAILS = ? WHERE ORDERID = ?";
+    //    private static String SQL_DELETE = "DELETE FROM " + TABLE_NAME + " WHERE ORDERID = ?";
+    //    private static String SQL_ALL_VALUE = "SELECT * FROM " + TABLE_NAME;
+    //    private static String SQL_CLEAR = "DELETE FROM " + TABLE_NAME;
+    //    private static String SQL_ACCURATE_QUERY_VALUE = "SELECT * FROM " + TABLE_NAME + " WHERE ORDERNAME = ?";
+
+    //    private SQLiteConnection mySQL;
+    //    private static UserOrderSQLManagement instance;
+
+    //    //单例模式
+    //    public static UserOrderSQLManagement GetInstance()
+    //    {
+    //        if (instance == null)
+    //        {
+    //            instance = new UserOrderSQLManagement();
+    //        }
+    //        return instance;
+    //    }
+
+    //    //创建表单
+    //    private UserOrderSQLManagement()
+    //    {
+    //        mySQL = new SQLiteConnection(DB_NAME);
+    //        using (var statement = mySQL.Prepare(SQL_CREATE_TABLE))
+    //        {
+    //            statement.Step();
+    //        }
+    //    }
+
+    //    //清空
+    //    public void clear()
+    //    {
+    //        using (var statement = mySQL.Prepare(SQL_CLEAR))
+    //        {
+    //            statement.Step();
+    //        }
+    //    }
+    //    //插入表单
+    //    public void insert(UserOrder newOne)
+    //    {
+    //        //获得传入实例的值
+    //        int orderId = newOne.OrderId;
+    //        int userNum = newOne.UserNum;
+    //        int table = newOne.Table;
+    //        int pepper = newOne.Pepper;
+    //        float price = newOne.Price;
+    //        string details = newOne.Details;
+
+
+    //        using (var statement = mySQL.Prepare(SQL_INSERT))
+    //        {
+    //            statement.Bind(1, orderId.ToString());
+    //            statement.Bind(2, userNum.ToString());
+    //            statement.Bind(3, table.ToString());
+    //            statement.Bind(4, pepper.ToString());
+    //            statement.Bind(5, price.ToString());
+    //            statement.Bind(6, details);
+    //            statement.Step();
+    //        }
+    //    }
+
+    //    //删除表单
+    //    public void delete(int id)
+    //    {
+    //        using (var statement = mySQL.Prepare(SQL_DELETE))
+    //        {
+    //            statement.Bind(1, id.ToString());
+    //            statement.Step();
+    //        }
+    //    }
+
+    //    //更新表单
+    //    public void update(UserOrder newOne)
+    //    {
+    //        //获得传入实例的值
+    //        int orderId = newOne.OrderId;
+    //        int userNum = newOne.UserNum;
+    //        int table = newOne.Table;
+    //        int pepper = newOne.Pepper;
+    //        float price = newOne.Price;
+    //        string details = newOne.Details;
+    //        using (var statement = mySQL.Prepare(SQL_UPDATE))
+    //        {
+    //            statement.Bind(1, orderId.ToString());
+    //            statement.Bind(2, userNum.ToString());
+    //            statement.Bind(3, table.ToString());
+    //            statement.Bind(4, pepper.ToString());
+    //            statement.Bind(5, price.ToString());
+    //            statement.Bind(6, details);
+    //            statement.Step();
+    //        }
+    //    }
+
+    //    //得到全部
+    //    public void GetAll()
+    //    {
+    //        this.allItems.Clear();
+    //        using (var statement = mySQL.Prepare(SQL_ALL_VALUE))
+    //        {
+    //            while (SQLiteResult.ROW == statement.Step())
+    //            {
+    //                int getOrderId = int.Parse((string)statement[0]);
+    //                int getUserNum = int.Parse((string)statement[1]);
+    //                int getTable = int.Parse((string)statement[2]);
+    //                int getPepper = int.Parse((string)statement[3]);
+    //                float getPrice = float.Parse((string)statement[4]);
+    //                string getDetails = (string)statement[5];
+    //                UserOrder newOne = new UserOrder
+    //                {
+    //                    OrderId = getOrderId,
+    //                    UserNum = getUserNum,
+    //                    Table = getTable,
+    //                    Pepper = getPepper,
+    //                    Price = getPrice,
+    //                    Details = getDetails,
+
+    //                };
+    //                allItems.Add(newOne);
+    //            }
+    //        }
+    //    }
+    //}
 }

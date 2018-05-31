@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 using FastOrdering.Models;
@@ -11,32 +12,17 @@ namespace FastOrdering.Services
     // TODO WTS: Delete this file once your app is using real data.
     public class UserDataService
     {
-        public UserOrder currentUserOrder;
+        public UserOrder _current = new UserOrder();
+        public ObservableCollection<UserOrder> allItems = new ObservableCollection<UserOrder>();
+        private static UserDataService instance;
 
-        private static IEnumerable<UserOrder> AllOrders()
+        public static UserDataService GetInstance()
         {
-            // The following is order summary data
-            var data = new ObservableCollection<UserOrder>
+            if (instance == null)
             {
-                new UserOrder
-                    {
-                        Table = 5,
-                        UserNum = 4,
-                        Price = 4.3f,
-                        Details = "Aaa",
-                        Pepper = 3,
-                    },
-            };
-
-            return data;
-        }
-
-        // TODO WTS: Remove this once your MasterDetail pages are displaying real data
-        public static async Task<IEnumerable<UserOrder>> GetSampleModelDataAsync()
-        {
-            await Task.CompletedTask;
-
-            return AllOrders();
+                instance = new UserDataService();
+            }
+            return instance;
         }
     }
 }

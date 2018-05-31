@@ -27,30 +27,10 @@ namespace FastOrdering.Views
             get { return _selected; }
             set { Set(ref _selected, value); }
         }
-
-        public ObservableCollection<UserOrder> SampleItems { get; private set; } = new ObservableCollection<UserOrder>();
-
+        public UserDataService instance = UserDataService.GetInstance();
         public OrderViewPage()
         {
             InitializeComponent();
-            Loaded += OrderViewPage_Loaded;
-        }
-
-        private async void OrderViewPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            SampleItems.Clear();
-
-            var data = await UserDataService.GetSampleModelDataAsync();
-
-            foreach (var item in data)
-            {
-                SampleItems.Add(item);
-            }
-
-            if (MasterDetailsViewControl.ViewState == MasterDetailsViewState.Both)
-            {
-                Selected = SampleItems.First();
-            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

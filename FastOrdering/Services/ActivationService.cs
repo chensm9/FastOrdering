@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using FastOrdering.Activation;
+using FastOrdering.Helpers;
 
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
@@ -78,17 +79,22 @@ namespace FastOrdering.Services
 
         private async Task InitializeAsync()
         {
+            await Singleton<LiveTileService>.Instance.EnableQueueAsync();
+            await ThemeSelectorService.InitializeAsync();
             await Task.CompletedTask;
         }
 
         private async Task StartupAsync()
         {
+            ThemeSelectorService.SetRequestedTheme();
+            Singleton<LiveTileService>.Instance.SampleUpdate();
             await Task.CompletedTask;
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()
         {
-            yield break;
+            yield return Singleton<LiveTileService>.Instance;
+            yield return Singleton<SuspendAndResumeService>.Instance;
         }
 
         private bool IsInteractive(object args)

@@ -21,38 +21,17 @@ namespace FastOrdering.Views
     public sealed partial class OrderingPage : Page, INotifyPropertyChanged
     {
         private SampleOrder _selected;
-
+        public SampleDataService instance = SampleDataService.GetInstance();
         public SampleOrder Selected
         {
             get { return _selected; }
             set { Set(ref _selected, value); }
         }
-
-        public ObservableCollection<SampleOrder> SampleItems { get; private set; } = new ObservableCollection<SampleOrder>();
-
+       
         public OrderingPage()
         {
             InitializeComponent();
-            Loaded += OrderingPage_Loaded;
         }
-
-        private async void OrderingPage_Loaded(object sender, RoutedEventArgs e)
-        {
-            SampleItems.Clear();
-
-            var data = await SampleDataService.GetSampleModelDataAsync();
-
-            foreach (var item in data)
-            {
-                SampleItems.Add(item);
-            }
-
-            if (MasterDetailsViewControl.ViewState == MasterDetailsViewState.Both)
-            {
-                Selected = SampleItems.First();
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void Set<T>(ref T storage, T value, [CallerMemberName]string propertyName = null)

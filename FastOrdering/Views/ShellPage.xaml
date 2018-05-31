@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="FastOrdering.Views.ShellPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
@@ -14,7 +14,7 @@
         SelectedItem="{x:Bind Selected, Mode=OneWay}"
         Header="{x:Bind Selected.Content, Mode=OneWay}"
         ItemInvoked="OnItemInvoked"
-        IsSettingsVisible="False"
+        IsSettingsVisible="True"
         Background="#fff9e0">
         <NavigationView.MenuItems>
             <!--
@@ -23,12 +23,12 @@
             Or to use an IconElement instead of a Symbol see https://github.com/Microsoft/WindowsTemplateStudio/blob/master/docs/projectTypes/navigationpane.md
             Edit String/en-US/Resources.resw: Add a menu item title for each page
             -->
-            <NavigationViewItem x:Uid="Shell_Main" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />
-            <NavigationViewItem x:Uid="Shell_Ordering" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderingPage" Visibility="{x:Bind UM.SampleOrderVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_ShoppingCart" Icon="Document" helpers:NavHelper.NavigateTo="views:ShoppingCartPage" Visibility="{x:Bind UM.ShoppingCartVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_LogOn" Icon="Document" helpers:NavHelper.NavigateTo="views:LogOnPage" Visibility="{x:Bind UM.LogOnVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_OrderView" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderViewPage" Visibility="{x:Bind UM.OrderViewVisible,Mode=TwoWay}" />
-            <NavigationViewItem x:Uid="Shell_Management" Icon="Document" helpers:NavHelper.NavigateTo="views:ManagementPage" Visibility="{x:Bind UM.ManagementVisible,Mode=TwoWay}" />
+            <NavigationViewItem Content="主页" Icon="Document" helpers:NavHelper.NavigateTo="views:MainPage" />
+            <NavigationViewItem Content="点餐" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderingPage" Visibility="{x:Bind UM.SampleOrderVisible,Mode=TwoWay}" />
+            <NavigationViewItem Content="购物车" Icon="Document" helpers:NavHelper.NavigateTo="views:ShoppingCartPage" Visibility="{x:Bind UM.ShoppingCartVisible,Mode=TwoWay}" />
+            <NavigationViewItem Content="登录" Icon="Document" helpers:NavHelper.NavigateTo="views:LogOnPage" Visibility="{x:Bind UM.LogOnVisible,Mode=TwoWay}" />
+            <NavigationViewItem Content="订单管理" Icon="Document" helpers:NavHelper.NavigateTo="views:OrderViewPage" Visibility="{x:Bind UM.OrderViewVisible,Mode=TwoWay}" />
+            <NavigationViewItem Content="菜品管理" Icon="Document" helpers:NavHelper.NavigateTo="views:ManagementPage" Visibility="{x:Bind UM.ManagementVisible,Mode=TwoWay}" />
         </NavigationView.MenuItems>
         <NavigationView.HeaderTemplate>
             <DataTemplate>
@@ -36,7 +36,7 @@
                     FontSize="18"
                     Margin="12,0,0,0"
                     VerticalAlignment="Center"
-                    Text="美味快点，任凭你选 :P" />
+                    Text="美食快点，任凭你选 :P" />
             </DataTemplate>
         </NavigationView.HeaderTemplate>
         <Grid>
