@@ -454,7 +454,6 @@ namespace FastOrdering.Views
                 {
                     OrderId = instance._current.SampleItems[i].OrderId,
                     OrderName = instance._current.SampleItems[i].OrderName,
-                    OrderNum = instance._current.SampleItems[i].OrderNum,
                     Sold = instance._current.SampleItems[i].Sold,
                     Visited = instance._current.SampleItems[i].Visited,
                     Collected = instance._current.SampleItems[i].Collected,
@@ -470,7 +469,7 @@ namespace FastOrdering.Views
 
             MessageHelper msh = new MessageHelper(true, "csh1997926", "d41d8cd98f00b204e980", Phone.Text, "桌号为" + instance._current.Table + "的客人：您的订单已经成功创建，共" + instance._current.SampleItems.Count.ToString() + "个菜品，消费" + instance._current.Price.ToString() + "元。");
             var res = msh.GetSendStr();
-            instance.allItems.Add(newOne);
+            UserOrderSQLManagement.GetInstance().insert(newOne);
             ContentDialog AccessDate = new ContentDialog()
             {
                 Title = "订单创建成功！",

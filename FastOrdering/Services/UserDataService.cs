@@ -12,8 +12,8 @@ namespace FastOrdering.Services
     // TODO WTS: Delete this file once your app is using real data.
     public class UserDataService
     {
-        public UserOrder _current = new UserOrder();
-        public ObservableCollection<UserOrder> allItems = new ObservableCollection<UserOrder>();
+        public UserOrder _current;
+        public ObservableCollection<UserOrder> allItems;
         private static UserDataService instance;
 
         public static UserDataService GetInstance()
@@ -24,6 +24,13 @@ namespace FastOrdering.Services
             }
             return instance;
         }
+
+        private UserDataService() {
+            _current = new UserOrder();
+            //allItems = new ObservableCollection<UserOrder>();
+            allItems = UserOrderSQLManagement.GetInstance().allItems;
+        }
+
         private static IEnumerable<UserOrder> AllOrders()
         {
             // The following is order summary data

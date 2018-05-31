@@ -43,7 +43,7 @@
                     <TextBlock Text="辣味接受程度" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
                     <RatingControl x:Name="pepper" Value="{x:Bind MasterMenuItem.Pepper, Mode=OneWay}" HorizontalAlignment="Left" IsClearEnabled="True" IsReadOnly="True" />
                     <TextBlock Text="备注" Style="{StaticResource SubtitleTextBlockStyle}" Margin="0,8,0,0"/>
-                    <TextBlock Text="{x:Bind MasterMenuItem.Price, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind MasterMenuItem.Details, Mode=OneWay}" Style="{StaticResource BodyTextBlockStyle}" />
                     <StackPanel Orientation="Horizontal">
                         <Button Height="50" ToolTipService.ToolTip="刷新" Width="50" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Style="{StaticResource ButtonStyle1}" Margin="0,10,10,5">
                             <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE72C;"/>

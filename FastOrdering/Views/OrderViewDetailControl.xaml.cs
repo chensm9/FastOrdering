@@ -52,6 +52,9 @@ namespace FastOrdering.Views
                     MasterMenuItem.SampleItems.Remove(MasterMenuItem.SampleItems[i]);
                 }
             }
+            if (MasterMenuItem.SampleItems.Count == 0)
+                instance.allItems.Remove(MasterMenuItem);
+            UserOrderSQLManagement.GetInstance().delete(MasterMenuItem.OrderId, currentID);
         }
 
         //结账
@@ -66,6 +69,7 @@ namespace FastOrdering.Views
             };
             ContentDialogResult result = await ErrorDialog.ShowAsync();
             if (result == ContentDialogResult.Primary) return;
+            UserOrderSQLManagement.GetInstance().delete(MasterMenuItem.OrderId);
             instance.allItems.Remove(MasterMenuItem);
         }
 
@@ -81,6 +85,7 @@ namespace FastOrdering.Views
             };
             ContentDialogResult result = await ErrorDialog.ShowAsync();
             if (result == ContentDialogResult.Primary) return;
+            UserOrderSQLManagement.GetInstance().delete(MasterMenuItem.OrderId);
             instance.allItems.Remove(MasterMenuItem);
         }
 
