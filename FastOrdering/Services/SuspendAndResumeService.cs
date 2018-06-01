@@ -1,8 +1,4 @@
 ﻿using System;
-<<<<<<< HEAD
-=======
-using System.Reflection;
->>>>>>> CT
 using System.Threading.Tasks;
 
 using FastOrdering.Activation;

@@ -4,10 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-<<<<<<< HEAD
-=======
 using System.Text.RegularExpressions;
->>>>>>> CT
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -89,51 +86,6 @@ namespace FastOrdering.Views
                 await ErrDialog.ShowAsync();
             }
         }
-
-        //String numValue = "";
-        ////对于数量更改的处理
-        //private void ChangePrice(object sender, RoutedEventArgs e)
-        //{
-        //    var originalSource = e.OriginalSource as TextBox;
-        //    int currentID = (int)originalSource.DataContext;
-        //    int pos = -1;
-        //    //利用id的唯一性，寻找该菜品在菜单中的位置
-        //    for (int i = 0; i < instance._current.SampleItems.Count; ++i)
-        //    {
-        //        if (instance._current.SampleItems[i].OrderId == currentID)
-        //        {
-        //            //定位item的id
-        //            pos = i;
-        //        }
-        //    }
-        //    //此项已被删除
-        //    if(pos == -1)
-        //    {
-        //        return;
-        //    }
-        //    if (numValue != "")
-        //    {
-        //        //将字符串转换为整数
-        //        int tmp;
-        //        if (!int.TryParse(numValue, out tmp))
-        //        {
-        //            instance._current.SampleItems[pos].Ordered = 1;
-        //            Calculate();
-        //            InvalidNum();
-        //            return;
-        //        }
-        //        instance._current.SampleItems[pos].Ordered = tmp;
-        //    }
-        //    else
-        //    {
-        //        instance._current.SampleItems[pos].Ordered = 1;
-        //    }
-        //    Calculate();
-        //}
-        //private void GetValue(TextBox sender, TextBoxTextChangingEventArgs args)
-        //{
-        //    numValue = sender.Text;
-        //}
 
         private async void addItem(object sender, RoutedEventArgs e)
         {
@@ -482,7 +434,6 @@ namespace FastOrdering.Views
                 {
                     OrderId = instance._current.SampleItems[i].OrderId,
                     OrderName = instance._current.SampleItems[i].OrderName,
-                    OrderNum = instance._current.SampleItems[i].OrderNum,
                     Sold = instance._current.SampleItems[i].Sold,
                     Visited = instance._current.SampleItems[i].Visited,
                     Collected = instance._current.SampleItems[i].Collected,
@@ -520,7 +471,8 @@ namespace FastOrdering.Views
                 
                 await AccessDate.ShowAsync();
             }
-            instance.allItems.Add(newOne);
+            UserOrderSQLManagement.GetInstance().insert(newOne);
+
             Clear();
             instance._current.Clear();
             this.Frame.Navigate(typeof(MainPage));

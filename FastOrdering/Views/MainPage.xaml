@@ -81,7 +81,7 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
         <Grid
-            Background="#fff9e0">
+            Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->
 

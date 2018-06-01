@@ -38,7 +38,6 @@ namespace FastOrdering.Models
                 }
             }
             return (max + 1);
-<<<<<<< HEAD
         }
 
         public SampleOrder(bool flag)
@@ -56,25 +55,6 @@ namespace FastOrdering.Models
             }
         }
 
-=======
-        }
-
-        public SampleOrder(bool flag)
-        {
-            string ImgSource = "ms-appx:///Assets/newOne.jpg";
-            this.Pict = new BitmapImage(new Uri(ImgSource));
-            Visited = 0;
-            Collected = 0;
-            Ordered = 0;
-            //添加菜品时创建
-            if (flag)
-            {
-                this.OrderId = id;
-                id++;
-            }
-        }
-
->>>>>>> CT
         //菜品id
         public int OrderId { get; set; }
 

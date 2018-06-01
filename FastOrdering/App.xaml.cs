@@ -26,14 +26,8 @@ namespace FastOrdering
         public App()
         {
             InitializeComponent();
-<<<<<<< HEAD
-
-            EnteredBackground += App_EnteredBackground;
-            //this.Suspending += OnSuspending;
-=======
             TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
             EnteredBackground += App_EnteredBackground;
->>>>>>> CT
             var instance = SampleDataService.GetInstance();
             var mySQL = SampleOrderSQLManagement.GetInstance();
             // get all elements in sql
@@ -75,12 +69,9 @@ namespace FastOrdering
             return new Views.ShellPage();
         }
 
-<<<<<<< HEAD
-        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e) {
-=======
+
         private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
         {
->>>>>>> CT
             var deferral = e.GetDeferral();
             await Helpers.Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
             deferral.Complete();

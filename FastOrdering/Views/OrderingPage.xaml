@@ -8,7 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:model="using:FastOrdering.Models"
     xmlns:views="using:FastOrdering.Views"
-    mc:Ignorable="d" Background="#FFFFF9E0">
+    mc:Ignorable="d" >
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition />
@@ -42,7 +42,7 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid x:Name="ContentArea" Background="#FFFFF9E0">
+    <Grid x:Name="ContentArea" >
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="miniWidth">
@@ -71,6 +71,6 @@
             ItemTemplate="{StaticResource ItemTemplate}"
             DetailsTemplate="{StaticResource DetailsTemplate}"
             NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
-            BorderBrush="Transparent" Background="#FFFFF9E0" />
+            BorderBrush="Transparent"  />
     </Grid>
 </Page>

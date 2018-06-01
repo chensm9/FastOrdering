@@ -31,13 +31,5 @@ namespace FastOrdering.Services
             allItems = UserOrderSQLManagement.GetInstance().allItems;
         }
 
-        public static UserDataService GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new UserDataService();
-            }
-            return instance;
-        }
     }
 }

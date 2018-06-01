@@ -1,11 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-<<<<<<< HEAD
-
-=======
 using System.Text.RegularExpressions;
->>>>>>> CT
 using FastOrdering.Helpers;
 using FastOrdering.Services;
 
@@ -21,15 +17,11 @@ namespace FastOrdering.Views
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
         private ElementTheme _elementTheme = ThemeSelectorService.Theme;
-
-<<<<<<< HEAD
-=======
         public UserManagement instance = UserManagement.GetInstance();
 
         //成员信息
         public string DetailDescription = "小组成员：陈思敏 陈思航 陈涛 陈谱一\n" +
                                           "©2018 FastOrdering";
->>>>>>> CT
         public ElementTheme ElementTheme
         {
             get { return _elementTheme; }
@@ -49,8 +41,7 @@ namespace FastOrdering.Views
         public SettingsPage()
         {
             InitializeComponent();
-<<<<<<< HEAD
-=======
+
             if (instance.isLogOn)
             {
                 AboutMe.Visibility = Visibility.Collapsed;
@@ -61,7 +52,6 @@ namespace FastOrdering.Views
                 AboutMe.Visibility = Visibility.Visible;
                 UserSettings.Visibility = Visibility.Collapsed;
             }
->>>>>>> CT
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -108,8 +98,6 @@ namespace FastOrdering.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-<<<<<<< HEAD
-=======
 
         //用户名为空
         private async void EmptyUser()
@@ -302,6 +290,5 @@ namespace FastOrdering.Views
             }
             Confirm();
         }
->>>>>>> CT
     }
 }
