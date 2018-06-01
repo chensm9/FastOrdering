@@ -79,7 +79,7 @@ namespace FastOrdering.Services
 
         private async Task InitializeAsync()
         {
-            await Singleton<LiveTileService>.Instance.EnableQueueAsync();
+            //await Singleton<LiveTileService>.Instance.EnableQueueAsync();
             await ThemeSelectorService.InitializeAsync();
             await Task.CompletedTask;
         }
@@ -87,13 +87,13 @@ namespace FastOrdering.Services
         private async Task StartupAsync()
         {
             ThemeSelectorService.SetRequestedTheme();
-            Singleton<LiveTileService>.Instance.SampleUpdate();
+            //Singleton<LiveTileService>.Instance.SampleUpdate();
             await Task.CompletedTask;
         }
 
         private IEnumerable<ActivationHandler> GetActivationHandlers()
         {
-            yield return Singleton<LiveTileService>.Instance;
+            //yield return Singleton<LiveTileService>.Instance;
             yield return Singleton<SuspendAndResumeService>.Instance;
         }
 

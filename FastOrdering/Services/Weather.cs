@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace FastOrdering.Services
 {
+    //用于调用天气查询的api
     public class Weather
     {
         public async static Task<RootObject> GetWeather(String cityName)

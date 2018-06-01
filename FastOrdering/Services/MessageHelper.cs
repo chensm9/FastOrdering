@@ -9,6 +9,7 @@ using System.IO;
 
 namespace FastOrdering.Services
 {
+    //用于调用发送信息的api
     public class MessageHelper
     {
         private string url = @"http://utf8.api.smschinese.cn/";

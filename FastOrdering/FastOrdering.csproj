@@ -133,6 +133,10 @@
     <Compile Include="Services\SuspendAndResumeService.cs" />
     <Compile Include="Services\SuspensionState.cs" />
     <Compile Include="Services\ThemeSelectorService.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Services\TileService.cs" />
+>>>>>>> CT
     <Compile Include="Services\UserDataService.cs" />
     <Compile Include="Services\SampleDataService.cs" />
     <Compile Include="Services\UserManagement.cs" />

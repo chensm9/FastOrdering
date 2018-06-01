@@ -31,7 +31,7 @@ namespace FastOrdering.Views
         }
 
         private void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+        UserManagement instance = UserManagement.GetInstance();
         private void clearContent(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             username.Text = "";
@@ -48,6 +48,18 @@ namespace FastOrdering.Views
             }
 
             password.PlaceholderText = "密码";
+        }
+
+        //密码过长过短
+        private async void ShortPassword()
+        {
+            ContentDialog invalid = new ContentDialog
+            {
+                Title = "非法密码",
+                Content = "请输入长度大于等于6且长度小于等于16的密码",
+                PrimaryButtonText = "好"
+            };
+            await invalid.ShowAsync();
         }
 
         private async void checkAndLogOn(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -79,10 +91,10 @@ namespace FastOrdering.Views
                 else
                 {
                     //登录成功
-                    if (username.Text == UserManagement.GetInstance().userName &&
-                    password.Password == UserManagement.GetInstance().password)
+                    if (username.Text ==instance.userName &&
+                    instance.EncryptWithMD5(password.Password) ==instance.MD5password)
                     {
-                        UserManagement.GetInstance().SupplierLogOn();
+                       instance.SupplierLogOn();
                         ContentDialog logOn = new ContentDialog
                         {
                             Title = "登录",
@@ -127,12 +139,17 @@ namespace FastOrdering.Views
                         PrimaryButtonText = "好"
                     };
                     await userEmpty.ShowAsync();
+                } else if(password.Password.Length < 6 || password.Password.Length > 16)
+                {
+                    ShortPassword();
                 }
                 else
                 {
-                    if (username.Text == UserManagement.GetInstance().VertificationCode)
+                    if (username.Text == instance.VertificationCode)
                         //成功修改用户名密码
-                        UserManagement.GetInstance().password = password.Password;
+                        instance.MD5password = instance.EncryptWithMD5(password.Password);
+                        //更新用户数据库
+                        UserSQLManagement.GetInstance().update(instance.userName, instance.MD5password, instance.userPhone);
                         title.Text = "商家登录";
                         logIn.Content = "登录";
                         usrTitle.Text = "用户名";
@@ -143,7 +160,7 @@ namespace FastOrdering.Views
                         click1.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                         click2.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                         forget.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                        UserManagement.GetInstance().isEdit = false;
+                       instance.isEdit = false;
                 }
             }
         }
@@ -151,7 +168,7 @@ namespace FastOrdering.Views
         //图片随着密码正确性变化
         private void passwordChanging(PasswordBox sender, PasswordBoxPasswordChangingEventArgs args)
         {
-            if (!UserManagement.GetInstance().isEdit && password.Password == UserManagement.GetInstance().password)
+            if (!UserManagement.GetInstance().isEdit && instance.EncryptWithMD5(password.Password) ==instance.MD5password)
             {
                 click2.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
@@ -163,7 +180,7 @@ namespace FastOrdering.Views
 
         private void userNameChanging(TextBox sender, TextBoxTextChangingEventArgs args)
         {
-            if (!UserManagement.GetInstance().isEdit && username.Text == UserManagement.GetInstance().userName)
+            if (!UserManagement.GetInstance().isEdit && username.Text ==instance.userName)
             {
                 click1.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
@@ -173,10 +190,22 @@ namespace FastOrdering.Views
             }
         }
 
-        private void changePassword(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private async void changePassword(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            UserManagement.GetInstance().GetVertificationCode();
-            MessageHelper msh = new MessageHelper(true, "csh1997926", "d41d8cd98f00b204e980", "18664759453", "密码修改验证码【"+ UserManagement.GetInstance().VertificationCode +"】 请妥善保管好验证码，切勿转发。");
+            //网络错误
+            if (!UserManagement.GetInstance().isInternetConnected)
+            {
+                ContentDialog ErrInternet = new ContentDialog
+                {
+                    Title = "网络错误",
+                    Content = "无法修改密码",
+                    PrimaryButtonText = "好"
+                };
+                await ErrInternet.ShowAsync();
+                return;
+            }
+            instance.GetVertificationCode();
+            MessageHelper msh = new MessageHelper(true, "csh1997926", "d41d8cd98f00b204e980", instance.userPhone, "您的用户名为" + instance.userName +"。验证码为【"+instance.VertificationCode +"】 请妥善保管好验证码，切勿转发。");
             var res = msh.GetSendStr();
             title.Text = "修改用户名密码";
             logIn.Content = "修改";
@@ -188,7 +217,7 @@ namespace FastOrdering.Views
             password.Password = "";
             username.PlaceholderText = "验证码";
             password.PlaceholderText = "密码";
-            UserManagement.GetInstance().isEdit = true;
+           instance.isEdit = true;
         }
 
         private void ChangeToArrow(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

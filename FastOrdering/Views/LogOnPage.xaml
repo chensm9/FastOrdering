@@ -90,7 +90,7 @@
                     </PasswordBox>
                     <Image x:Name="click2" Source="../Assets/click.png" Height="25" Margin="20, 0, 0, 0" Visibility="Collapsed"/>
                 </StackPanel>
-                <TextBlock x:Name="forget" Text="忘记密码？" FontSize="{StaticResource MediumFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 15" Tapped="changePassword" PointerExited="ChangeToArrow" PointerMoved="ChangeToHand"/>
+                <TextBlock x:Name="forget" Text="忘记用户名/密码？" FontSize="{StaticResource MediumFontSize}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0, 0, 0, 15" Tapped="changePassword" PointerExited="ChangeToArrow" PointerMoved="ChangeToHand"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                     <Button x:Name="logIn" Content="登录" Style="{StaticResource ButtonRevealStyle}" Height="35" FontSize="{StaticResource MediumFontSize}" Width="60" VerticalContentAlignment="Center" Margin="0,0, 100,0" Click="checkAndLogOn"/>
                     <Button x:Name="clear" Content="清空" Style="{StaticResource ButtonRevealStyle}" Height="35" FontSize="{StaticResource MediumFontSize}" Width="60" VerticalContentAlignment="Center" Click="clearContent"/>

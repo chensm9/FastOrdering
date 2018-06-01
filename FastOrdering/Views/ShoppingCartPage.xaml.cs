@@ -4,6 +4,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+<<<<<<< HEAD
+=======
+using System.Text.RegularExpressions;
+>>>>>>> CT
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -270,6 +274,7 @@ namespace FastOrdering.Views
             userNum.Text = "";
             pepper.Value = -1;
             details.Text = "";
+            Phone.Text = "";
         }
 
         private void Calculate()
@@ -382,6 +387,24 @@ namespace FastOrdering.Views
             };
             ContentDialogResult result = await EmptyPrice.ShowAsync();
         }
+
+        //判断手机号合法性
+        private bool IsMobilePhone(string input)
+        {
+            Regex regex = new Regex("^1[34578]\\d{9}$");
+            return regex.IsMatch(input);
+        }
+        //手机不合法
+        private async void InvalidPhone()
+        {
+            ContentDialog invalid = new ContentDialog
+            {
+                Title = "非法手机号",
+                Content = "请输入正确格式的手机号",
+                PrimaryButtonText = "好"
+            };
+            await invalid.ShowAsync();
+        }
         //创建订单
         private void CreateUserOrder(object sender, RoutedEventArgs e)
         {
@@ -404,6 +427,11 @@ namespace FastOrdering.Views
             }
             else
             {
+                if (!IsMobilePhone(Phone.Text))
+                {
+                    InvalidPhone();
+                    return;
+                }
                 //桌号、就餐人数、辣味接受程度的临时变量
                 int tbId, usrNum;
                 //桌号转换为数字
@@ -454,6 +482,7 @@ namespace FastOrdering.Views
                 {
                     OrderId = instance._current.SampleItems[i].OrderId,
                     OrderName = instance._current.SampleItems[i].OrderName,
+                    OrderNum = instance._current.SampleItems[i].OrderNum,
                     Sold = instance._current.SampleItems[i].Sold,
                     Visited = instance._current.SampleItems[i].Visited,
                     Collected = instance._current.SampleItems[i].Collected,
@@ -466,20 +495,34 @@ namespace FastOrdering.Views
                 };
                 newOne.SampleItems.Add(newItem);
             }
-
-            MessageHelper msh = new MessageHelper(true, "csh1997926", "d41d8cd98f00b204e980", Phone.Text, "桌号为" + instance._current.Table + "的客人：您的订单已经成功创建，共" + instance._current.SampleItems.Count.ToString() + "个菜品，消费" + instance._current.Price.ToString() + "元。");
-            var res = msh.GetSendStr();
-            UserOrderSQLManagement.GetInstance().insert(newOne);
-            ContentDialog AccessDate = new ContentDialog()
+            //网络错误处理
+            if (!UserManagement.GetInstance().isInternetConnected)
             {
-                Title = "订单创建成功！",
-                Content = "您的订单已创建成功",
-                PrimaryButtonText = "好"
-            };
+                ContentDialog ErrInternet = new ContentDialog
+                {
+                    Title = "网络错误",
+                    Content = "订单已提交但无信息通知",
+                    PrimaryButtonText = "好"
+                };
+                await ErrInternet.ShowAsync();
+            }
+            else
+            {
+                MessageHelper msh = new MessageHelper(true, "csh1997926", "d41d8cd98f00b204e980", Phone.Text, "桌号为" + instance._current.Table + "的客人：您的订单已经成功创建，共" + instance._current.SampleItems.Count.ToString() + "个菜品，消费" + instance._current.Price.ToString() + "元。");
+                var res = msh.GetSendStr();
+                
+                ContentDialog AccessDate = new ContentDialog()
+                {
+                    Title = "订单创建成功！",
+                    Content = "您的订单已创建成功",
+                    PrimaryButtonText = "好"
+                };
+                
+                await AccessDate.ShowAsync();
+            }
+            instance.allItems.Add(newOne);
             Clear();
             instance._current.Clear();
-            await AccessDate.ShowAsync();
-
             this.Frame.Navigate(typeof(MainPage));
         }
     }

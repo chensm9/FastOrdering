@@ -216,7 +216,7 @@
             </ScrollViewer>
             <Line Grid.Column="0" Grid.Row="2" x:Name ="akg" Stroke ="White" Height="0" Width="0" Visibility="Collapsed"/>
             <Grid Grid.Row="3" Grid.Column="1">
-                <Button x:Name="deleteall" Style="{StaticResource ButtonRevealStyle}" Content="删除所有菜品" HorizontalAlignment="Left" Background="BurlyWood" VerticalAlignment="Center" FontSize="{StaticResource MediumFontSize}" Height="30" Click="DeleteAllItems"/>
+                <Button x:Name="deleteall" Style="{StaticResource ButtonRevealStyle}" Content="删除所有菜品" HorizontalAlignment="Left" Background="BurlyWood" VerticalAlignment="Center" FontSize="{StaticResource MediumFontSize}" Height="35" Click="DeleteAllItems"/>
             </Grid>
             <Grid Padding="5,5,5,5" Grid.Column="1" Grid.Row="4">
                 <Grid.Background>

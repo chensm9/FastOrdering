@@ -4,27 +4,32 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 using FastOrdering.Models;
+using Windows.UI.Notifications;
 
 namespace FastOrdering.Services
 {
-    // This class holds sample data used by some generated pages to show how they can be used.
+    // SampleDataService用于存放菜品集合和临时的菜品数据，还存取首页与购物车的推荐信息
     // TODO WTS: Delete this file once your app is using real data.
     public class SampleDataService
     {
+        //临时菜品数据
         public SampleOrder _current = new SampleOrder();
+        //菜品集合
         public ObservableCollection<SampleOrder> allItems = new ObservableCollection<SampleOrder>();
-        //购物车页面的推荐
+        //购物车页面的推荐数据
         public ObservableCollection<SampleOrder> shoppingCartViewItems = new ObservableCollection<SampleOrder>();
-        //主页推荐
+        //主页推荐数据
         public ObservableCollection<SampleOrder> mainPageViewItems = new ObservableCollection<SampleOrder>();
 
-        //临时类用于排序
+        //临时类用于排序的数据
         private ObservableCollection<SampleOrder> tmpItems = new ObservableCollection<SampleOrder>();
 
+        //购物车下方温度提示
         public String tips = "";
         private static SampleDataService instance;
+        //记录当前温度
         private int current = 25;
-
+        //单例模式
         public static SampleDataService GetInstance()
         {
             if (instance == null)
@@ -37,14 +42,21 @@ namespace FastOrdering.Services
         //得到提示
         public void GetTips()
         {
+            //网络错误返回
+            if (!UserManagement.GetInstance().isInternetConnected)
+            {
+                this.tips = "不能根据当前温度推荐菜品";
+                return;
+            }
             String currentTem = UserManagement.GetInstance().currentTemporature;
             int pos = currentTem.IndexOf("℃");
             //截取信息中的温度
             current = int.Parse(currentTem.Substring(0, pos));
-            if(current < 15)
+            if (current < 15)
             {
                 this.tips = "天气转冷，如下菜式吃了不怕冷哦";
-            }else if (current < 25 && current > 15)
+            }
+            else if (current < 25 && current > 15)
             {
                 this.tips = "刚刚好的天气，来点佳肴吧";
             }
@@ -58,7 +70,7 @@ namespace FastOrdering.Services
         private void GetItemsAccordingToString(String str, ObservableCollection<SampleOrder> collection)
         {
             SampleOrderSQLManagement.GetInstance().queryItem(str);
-            for(int i = 0; i < SampleOrderSQLManagement.GetInstance().allItems.Count; ++i)
+            for (int i = 0; i < SampleOrderSQLManagement.GetInstance().allItems.Count; ++i)
             {
                 collection.Add(SampleOrderSQLManagement.GetInstance().allItems[i]);
             }
@@ -73,6 +85,7 @@ namespace FastOrdering.Services
             {
                 tmpItems.Add(SampleOrderSQLManagement.GetInstance().allItems[i]);
             }
+            //冒泡排序
             for (int i = 0; i < tmpItems.Count; i++)
             {
                 for (int j = i + 1; j < tmpItems.Count; j++)
@@ -91,11 +104,13 @@ namespace FastOrdering.Services
         private void SortObservableCollectionByCollected()
         {
             mainPageViewItems.Clear();
+            //从数据库中获得所有菜品数据
             SampleOrderSQLManagement.GetInstance().GetAll();
             for (int i = 0; i < SampleOrderSQLManagement.GetInstance().allItems.Count; ++i)
             {
                 mainPageViewItems.Add(SampleOrderSQLManagement.GetInstance().allItems[i]);
             }
+            //冒泡排序
             for (int i = 0; i < mainPageViewItems.Count; i++)
             {
                 for (int j = i + 1; j < mainPageViewItems.Count; j++)
@@ -121,11 +136,53 @@ namespace FastOrdering.Services
             }
         }
 
+        public void UpdateTile()
+        {
+            TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+            SampleOrderSQLManagement.GetInstance().GetAll();
+            ObservableCollection<SampleOrder> all_item = new ObservableCollection<SampleOrder>();
+            for (int i = 0; i < SampleOrderSQLManagement.GetInstance().allItems.Count; ++i)
+            {
+                all_item.Add(SampleOrderSQLManagement.GetInstance().allItems[i]);
+            }
+            for (int i = 0; i < all_item.Count; i++)
+            {
+                for (int j = i + 1; j < all_item.Count; j++)
+                {
+                    if (all_item[i].Collected < all_item[j].Collected)
+                    {
+                        SampleOrder tmp = all_item[i];
+                        all_item[i] = all_item[j];
+                        all_item[j] = tmp;
+                    }
+                }
+            }
+            int count = all_item.Count >= 10 ? 10 : all_item.Count;
+            for(int i = 0; i < count; i++)
+            {
+                createTile(all_item[i]);
+            }
+
+        }
+
+        private void createTile(SampleOrder item)
+        {
+            var xmlDoc = TileService.CreateTiles(item);
+            var updater = TileUpdateManager.CreateTileUpdaterForApplication();
+            TileNotification notification = new TileNotification(xmlDoc);
+            updater.Update(notification);
+        }
+
         //得到购物车推荐列表
         public void GetListView()
         {
+            if (!UserManagement.GetInstance().isInternetConnected)
+            {
+                return;
+            }
             SortObservableCollectionByVisited();
             shoppingCartViewItems.Clear();
+            //低温推荐热菜
             if (current < 15)
             {
 
@@ -139,11 +196,11 @@ namespace FastOrdering.Services
                 GetItemsAccordingToString("焖", shoppingCartViewItems);
                 GetItemsAccordingToString("爆", shoppingCartViewItems);
 
-                if(shoppingCartViewItems.Count < 10)
+                if (shoppingCartViewItems.Count < 10)
                 {
-                    //将空位填满
+                    //将空位填满，菜品足够情况下确保有10个推荐菜品
                     int pos = 0;
-                    while(shoppingCartViewItems.Count < 10 && pos < tmpItems.Count)
+                    while (shoppingCartViewItems.Count < 10 && pos < tmpItems.Count)
                     {
                         shoppingCartViewItems.Add(tmpItems[pos]);
                         pos++;
@@ -152,6 +209,7 @@ namespace FastOrdering.Services
             }
             else if (current < 25 && current > 15)
             {
+                //温度适宜提供热菜
                 GetItemsAccordingToString("煮", shoppingCartViewItems);
                 GetItemsAccordingToString("煲", shoppingCartViewItems);
                 GetItemsAccordingToString("炖", shoppingCartViewItems);
@@ -170,6 +228,7 @@ namespace FastOrdering.Services
             }
             else
             {
+                //温度较高提供冷饮
                 GetItemsAccordingToString("冰", shoppingCartViewItems);
                 GetItemsAccordingToString("雪", shoppingCartViewItems);
                 GetItemsAccordingToString("汁", shoppingCartViewItems);
@@ -191,7 +250,7 @@ namespace FastOrdering.Services
             }
 
             //去重
-            if(shoppingCartViewItems.Count <= 1)
+            if (shoppingCartViewItems.Count <= 1)
             {
                 return;
             }
@@ -208,66 +267,11 @@ namespace FastOrdering.Services
                 }
             }
 
-            //删除多余的
-            while( shoppingCartViewItems.Count > 10)
+            //删除多余的菜品，保留10个
+            while (shoppingCartViewItems.Count > 10)
             {
                 shoppingCartViewItems.Remove(shoppingCartViewItems[shoppingCartViewItems.Count - 1]);
             }
-        }
-
-        private static IEnumerable<SampleOrder> GetMyOrder()
-        {
-            // The following is order summary data
-            var data = new ObservableCollection<SampleOrder>
-            {
-                new SampleOrder
-                    {
-                        OrderName = "寿司",
-                        Price = 19.99f,
-                        Summary = "ddddddddddddddddddd",
-                        Details = "aaa",
-                    },
-            };
-
-            return data;
-        }
-
-        // TODO WTS: Remove this once your MasterDetail pages are displaying real data
-        public static async Task<IEnumerable<SampleOrder>> GetSampleModelDataAsync()
-        {
-            await Task.CompletedTask;
-
-            return GetMyOrder();
-        }
-
-        public static ObservableCollection<SampleOrder> GeyMyOrder()
-        {
-            // The following is order summary data
-            var data = new ObservableCollection<SampleOrder>
-            {
-                new SampleOrder
-                    {
-                        OrderName = "寿司",
-                        Price = 19.99f,
-                        Summary = "ddddddddddddddddddd",
-                        Details = "aaa",
-                    },
-                new SampleOrder
-                    {
-                        OrderName = "寿司",
-                        Price = 19.99f,
-                        Summary = "ddddddddddddddddddd",
-                        Details = "aaa",
-                    },
-
-            };
-            return data;
-        }
-
-        public static async Task<IEnumerable<SampleOrder>> GetMyOrderAsync()
-        {
-            await Task.CompletedTask;
-            return GetMyOrder();
         }
     }
 }
