@@ -27,6 +27,7 @@ namespace FastOrdering
             InitializeComponent();
 
             EnteredBackground += App_EnteredBackground;
+            //this.Suspending += OnSuspending;
             var instance = SampleDataService.GetInstance();
             var mySQL = SampleOrderSQLManagement.GetInstance();
             // get all elements in sql
@@ -68,11 +69,21 @@ namespace FastOrdering
             return new Views.ShellPage();
         }
 
-        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e)
-        {
+        private async void App_EnteredBackground(object sender, EnteredBackgroundEventArgs e) {
             var deferral = e.GetDeferral();
             await Helpers.Singleton<SuspendAndResumeService>.Instance.SaveStateAsync();
             deferral.Complete();
         }
+
+        //private void OnSuspending(object sender, SuspendingEventArgs e) {
+        //    var deferral = e.SuspendingOperation.GetDeferral();
+        //    //TODO: 保存应用程序状态并停止任何后台活动
+        //    issuspend = true;
+        //    Frame frame = Window.Current.Content as Frame;
+        //    if (frame != null)
+        //        ApplicationData.Current.LocalSettings.Values["NavigationState"] = frame.GetNavigationState();
+        //    deferral.Complete();
+        //}
+
     }
 }
